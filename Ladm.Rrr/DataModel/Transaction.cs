@@ -33,6 +33,11 @@ namespace Ladm.DataModel
         /// Source LAUnit UIds
         /// </summary>
         public string SourcePropertiesIds { get; set; }
+
+        public DateTime? ExpirationDate { get; set; }
+        public DateTime? RegistrationDate { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
     }
     /// <summary>
     /// Helpers extends Transaction objects

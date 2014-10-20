@@ -80,12 +80,21 @@ namespace Ladm
             var srcLa = context.LAUnit.Where(item=>item.Properties.Intersect(sourceSU).Count()>0);
 
             var filteredRRR = context.RRRs.Where(item=>srcLa.Contains(item.LAUnit));
-
+            List<RRR> newRrrs = new List<RRR>();
             foreach (var item in filteredRRR)
-	        {
-                item.CancelledBy = transaction;
-	        }        
-            
+	        {                
+                var rrr = (RRR)Activator.CreateInstance(item.GetType());
+                rrr.LAUnit = item.LAUnit;
+                item.EndLifeSpan = rrr.BeginLifeSpan = DateTime.Now;
+                rrr.Version = item.Version + 1;
+                rrr.CanExpire = item.CanExpire;
+                rrr.ExpirationDate = transaction.ExpirationDate;
+                rrr.EndDate = transaction.EndDate;
+                rrr.CancelledBy = transaction;
+                newRrrs.Add(rrr);
+	        }
+
+            context.RRRs.AddRange(newRrrs);
             throw new NotImplementedException();
         }
         /// <summary>
