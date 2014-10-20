@@ -13,9 +13,9 @@ namespace Example1
         {
             using (var ctx = new Ladm.DataModel.LadmDbContext())
             {
-                /*Transaction transaction = new Transaction() { Id = 1, TransactionType = new TransactionMetaData() { Id = 1 } };
+                Transaction transaction = new Transaction() { TransactionNumber = "TRN-0001", TransactionType = new TransactionMetaData() { Code="TRN" } };
                 ctx.Transactions.Add(transaction);
-                ctx.SaveChanges();*/
+                ctx.SaveChanges();
             }
         }
     }
