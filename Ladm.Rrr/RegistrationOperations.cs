@@ -76,8 +76,15 @@ namespace Ladm
         private static void completeCancelRegistration(Transaction transaction, LadmDbContext context)
         {
             var sourceSU = transaction.GetSourceProperties();
+            
+            var srcLa = context.LAUnit.Where(item=>item.Properties.Intersect(sourceSU).Count()>0);
 
-            //context.RRRs
+            var filteredRRR = context.RRRs.Where(item=>srcLa.Contains(item.LAUnit));
+
+            foreach (var item in filteredRRR)
+	        {
+                item.CancelledBy = transaction;
+	        }        
             
             throw new NotImplementedException();
         }
