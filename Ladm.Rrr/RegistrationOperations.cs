@@ -55,7 +55,7 @@ namespace Ladm
             switch (transaction.TransactionType.Action)
             {
                 case TransactionMetaData.ActionCode.Create:
-                    completeCreateRegistration(transaction,context);
+                    completeCreateRegistration(transaction, context);
                     break;
                 case TransactionMetaData.ActionCode.Alter:
                     completeAlterRegistration(transaction, context);
@@ -65,7 +65,7 @@ namespace Ladm
                     break;
                 default:
                     throw new InvalidOperationException("Unknown action.");
-                    //break;
+                //break;
             }
         }
         /// <summary>
@@ -76,23 +76,31 @@ namespace Ladm
         private static void completeCancelRegistration(Transaction transaction, LadmDbContext context)
         {
             var sourceSU = transaction.GetSourceProperties();
-            
-            var srcLa = context.LAUnit.Where(item=>item.Properties.Intersect(sourceSU).Count()>0);
 
-            var filteredRRR = context.RRRs.Where(item=>srcLa.Contains(item.LAUnit));
+            var srcLa = context.LAUnit.Where(item => item.Properties.Intersect(sourceSU).Count() > 0);
+
+            var filteredRRR = context.RRRs.Where(item => srcLa.Contains(item.LAUnit));
             List<RRR> newRrrs = new List<RRR>();
             foreach (var item in filteredRRR)
-	        {                
+            {
                 var rrr = (RRR)Activator.CreateInstance(item.GetType());
                 rrr.LAUnit = item.LAUnit;
                 item.EndLifeSpan = rrr.BeginLifeSpan = DateTime.Now;
                 rrr.Version = item.Version + 1;
+
+                /// sometimes we have request to get first of a kind!
+                rrr.Origin = item.Origin;
+                /// inherite creator
+                rrr.CreatedBy = item.CreatedBy;
+
                 rrr.CanExpire = item.CanExpire;
                 rrr.ExpirationDate = transaction.ExpirationDate;
                 rrr.EndDate = transaction.EndDate;
+                /// mark by me
                 rrr.CancelledBy = transaction;
+
                 newRrrs.Add(rrr);
-	        }
+            }
 
             context.RRRs.AddRange(newRrrs);
             throw new NotImplementedException();
@@ -115,19 +123,14 @@ namespace Ladm
         private static void completeCreateRegistration(Transaction transaction, LadmDbContext context)
         {
             var targetParties = transaction.Parties.Where(
-                party=>transaction.TransactionType.TargetPartyRole.Equals(party.Role));
+                party => transaction.TransactionType.TargetPartyRole.Equals(party.Role));
 
             var TargetProperties = transaction.GetTargetProperties();
-            var rrrType = Type.GetType("Ladm."+ transaction.TransactionType.RightType);
-            
-            /*ObjectHandle handle = Activator.CreateInstance("Ladm", transaction.TransactionType.RightType);
-                ///(transaction.TransactionType.RightType);
-            var rrr = (RRR) handle.Unwrap();
-            */
+            var rrrType = Type.GetType("Ladm." + transaction.TransactionType.RightType);
             /// Ladm dont restrict amount of LAUnits
             /// normal registration assumes each transaction have single LAUnit
-            /// But for case of clarification of parts it may result in collections 
-            foreach(var party in targetParties )
+            /// But for case of clarification of parts it may result in collections (as in case of multiply RRR ops)
+            foreach (var party in targetParties)
             {
                 var laUnits = transaction.GetPartyTargetLaUnit(party);
                 foreach (var laUnit in laUnits)
@@ -137,6 +140,11 @@ namespace Ladm
                     rrr.BeginLifeSpan = DateTime.Now;
                     rrr.Party = party;
                     rrr.LAUnit = laUnit;
+
+                    rrr.StartDate = transaction.StartDate;
+                    //if rrr meta expirable
+                    rrr.ExpirationDate = transaction.ExpirationDate;
+
                     //there shoud proceed handler to implement right dependent attribute filling
                     //BuissnessLogicProvider.RegisterRRRHandler(transaction,rrr)
                     context.RRRs.Add(rrr);
