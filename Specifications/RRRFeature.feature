@@ -4,15 +4,16 @@
 	On complete we have RRR objects produced
 
 Background: 
-	Given We have Parcel with Uid = 1 
-	And Party "John Doe" with id=1
-	And Party "Mark Samuels" with id=2
+	Given We have Parcel with Uid = "Property 1"
 	And Registration transaction "REGO" with No."TRN-001"
 
 @mytag
 Scenario: Register rights for each target party 
-	Given I have add target Party with id.1 to transaction "TRN-001"
-	And I have add target Party with id.2 to transaction "TRN-001"
-	And I have add target Property with uid."1" to transaction "TRN-001"
+	Given Transaction No."TRN-001" has party "John Doe" with role "Grantee" 
+	And Transaction No."TRN-001" has party "Mark Twen" with role "Grantee"
+	And Transaction No."TRN-001" has target property with Uid = "Property 1"
+	And Transaction No."TRN-001" target parties reference property with Uid = "Property 1"
 	When transaction "TRN-001" is completed
-	Then "2" "Occupancy" RRR produced
+	Then Agains property "Property 1" registered 2 "Occupancy" rights
+	And Party "John Doe" have active "Occupancy" rights on "Property 1"
+	And Party "Mark Twen" have active "Occupancy" rights on "Property 1"

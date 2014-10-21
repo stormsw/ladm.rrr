@@ -103,7 +103,6 @@ namespace Ladm
             }
 
             context.RRRs.AddRange(newRrrs);
-            throw new NotImplementedException();
         }
         /// <summary>
         /// Simplest way supposes to cancel old and create new
@@ -126,7 +125,7 @@ namespace Ladm
                 party => transaction.TransactionType.TargetPartyRole.Equals(party.Role));
 
             var TargetProperties = transaction.GetTargetProperties();
-            var rrrType = Type.GetType("Ladm." + transaction.TransactionType.RightType);
+            var rrrType = Type.GetType("Ladm.DataModel." + transaction.TransactionType.RightType);
             /// Ladm dont restrict amount of LAUnits
             /// normal registration assumes each transaction have single LAUnit
             /// But for case of clarification of parts it may result in collections (as in case of multiply RRR ops)

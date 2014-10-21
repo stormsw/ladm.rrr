@@ -17,11 +17,10 @@ namespace Ladm.DataModel
         public DbSet<RRR> RRRs { get; set; }
         public DbSet<Party> Parties { get; set; }
 
-        
         public LadmDbContext():base("LadmDbConnectionString")
         {
             // TODO: remove and use Appconfig
-            Database.SetInitializer<LadmDbContext>(new CreateDatabaseIfNotExists<LadmDbContext>());
+            //Database.SetInitializer<LadmDbContext>(new CreateDatabaseIfNotExists<LadmDbContext>());
             //Database.SetInitializer<LadmDbContext>(new DropCreateDatabaseIfModelChanges<LadmDbContext>());
             //Database.SetInitializer<LadmDbContext>(new DropCreateDatabaseAlways<LadmDbContext>());           
         }
