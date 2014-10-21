@@ -18,7 +18,7 @@ namespace Specifications
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "1.9.0.77")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class RRRFeatureFeature : Xunit.IUseFixture<RRRFeatureFeature.FixtureData>, System.IDisposable
+    public partial class CreateRRRFeatureFeature : Xunit.IUseFixture<CreateRRRFeatureFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -26,7 +26,7 @@ namespace Specifications
 #line 1 "RRRFeature.feature"
 #line hidden
         
-        public RRRFeatureFeature()
+        public CreateRRRFeatureFeature()
         {
             this.TestInitialize();
         }
@@ -34,8 +34,8 @@ namespace Specifications
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "RRRFeature", "In order to avoid silly mistakes\nAs a math idiot\nI want to be told the sum of two" +
-                    " numbers", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Create RRR Feature", "For Registrations transactions\nWith Action = Create (0)\nOn complete we have RRR o" +
+                    "bjects produced", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -67,10 +67,18 @@ namespace Specifications
         public virtual void FeatureBackground()
         {
 #line 6
+#line 7
+ testRunner.Given("We have Parcel with Uid = 1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 8
+ testRunner.And("Party \"John Doe\" with id=1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 9
+ testRunner.And("Party \"Mark Samuels\" with id=2", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 10
+ testRunner.And("Registration transaction \"REGO\" with No.\"TRN-001\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
         }
         
-        public virtual void SetFixture(RRRFeatureFeature.FixtureData fixtureData)
+        public virtual void SetFixture(CreateRRRFeatureFeature.FixtureData fixtureData)
         {
         }
         
@@ -80,24 +88,26 @@ namespace Specifications
         }
         
         [Xunit.FactAttribute()]
-        [Xunit.TraitAttribute("FeatureTitle", "RRRFeature")]
-        [Xunit.TraitAttribute("Description", "Add two numbers")]
-        public virtual void AddTwoNumbers()
+        [Xunit.TraitAttribute("FeatureTitle", "Create RRR Feature")]
+        [Xunit.TraitAttribute("Description", "Register rights for each target party")]
+        public virtual void RegisterRightsForEachTargetParty()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add two numbers", new string[] {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Register rights for each target party", new string[] {
                         "mytag"});
-#line 9
+#line 13
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 10
- testRunner.Given("I have entered 50 into the calculator", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 11
- testRunner.And("I have entered 70 into the calculator", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 12
- testRunner.When("I press add", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 13
- testRunner.Then("the result should be 120 on the screen", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 14
+ testRunner.Given("I have add target Party with id.1 to transaction \"TRN-001\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 15
+ testRunner.And("I have add target Party with id.2 to transaction \"TRN-001\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 16
+ testRunner.And("I have add target Property with uid.\"1\" to transaction \"TRN-001\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 17
+ testRunner.When("transaction \"TRN-001\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 18
+ testRunner.Then("\"2\" \"Occupancy\" RRR produced", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -109,12 +119,12 @@ this.FeatureBackground();
             
             public FixtureData()
             {
-                RRRFeatureFeature.FeatureSetup();
+                CreateRRRFeatureFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                RRRFeatureFeature.FeatureTearDown();
+                CreateRRRFeatureFeature.FeatureTearDown();
             }
         }
     }

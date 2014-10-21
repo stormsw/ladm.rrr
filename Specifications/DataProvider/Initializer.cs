@@ -17,9 +17,65 @@ namespace Specifications.DataProvider
             protected override void Seed(LadmDbContext context)
             {
                 //sample data
-                IList<Transaction> transactions = new List<Transaction>();
-                transactions.Add(new Transaction() {TransactionNumber="TRN-000001", SourcePropertiesIds = string.Empty, TargetPropertiesIds=string.Empty,Status=Transaction.TransactionStatus.Lodged });
-                context.Transactions.AddRange(transactions);
+                IList<TransactionMetaData> tmd = new List<TransactionMetaData>()
+                {
+                    /// Occupancy
+                    new TransactionMetaData(){
+                        RightType = "Occupancy",
+                        Action = TransactionMetaData.ActionCode.Create,
+                        Meta = TransactionMetaData.MetaCode.Registration,
+                        Code = "REGO",
+                        Label = "Register Occupancy",
+                        TargetPartyRole = "Grantee"                       
+                    },
+
+                    new TransactionMetaData(){
+                        RightType = "Occupancy",
+                        Action = TransactionMetaData.ActionCode.Alter,
+                        Meta = TransactionMetaData.MetaCode.Registration,
+                        Code = "ALTO",
+                        Label = "Alter Occupancy",
+                        TargetPartyRole = "Grantee"                       
+                    },
+
+                    new TransactionMetaData(){
+                        RightType = "Occupancy",
+                        Action = TransactionMetaData.ActionCode.Cancell,
+                        Meta = TransactionMetaData.MetaCode.Registration,
+                        Code = "CANO",
+                        Label = "Cancel Occupancy",
+                        TargetPartyRole = null
+                    },
+                    /// Mortgage
+                    new TransactionMetaData(){
+                        RightType = "Mortgage",
+                        Action = TransactionMetaData.ActionCode.Create,
+                        Meta = TransactionMetaData.MetaCode.Registration,
+                        Code = "REGM",
+                        Label = "Register Mortgage",
+                        TargetPartyRole = "Mortgagee"                       
+                    },
+
+                    new TransactionMetaData(){
+                        RightType = "Mortgage",
+                        Action = TransactionMetaData.ActionCode.Alter,
+                        Meta = TransactionMetaData.MetaCode.Registration,
+                        Code = "ALTM",
+                        Label = "Alter Mortgage",
+                        TargetPartyRole = "Mortgagee"                       
+                    },
+
+                    new TransactionMetaData(){
+                        RightType = "Mortgage",
+                        Action = TransactionMetaData.ActionCode.Cancell,
+                        Meta = TransactionMetaData.MetaCode.Registration,
+                        Code = "CANM",
+                        Label = "Cancel Mortgage",
+                        TargetPartyRole = null
+                    },
+                };
+
+                context.TransactionMetaData.AddRange(tmd);
                 context.SaveChanges();
 
                 base.Seed(context);
