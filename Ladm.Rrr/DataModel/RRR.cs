@@ -56,19 +56,20 @@ namespace Ladm.DataModel
         /// For expirable
         /// </summary>
         public DateTime? ExpirationDate { get; set; }
+        #region Versionable attribs       
         /// <summary>
         /// Version start date
-        /// </summary>
-        public DateTime? BeginLifeSpan { get; set; }
+        /// </summary>        
+        public DateTime? BeginLifeSpanVersion { get; set; }
         /// <summary>
         /// Version end date
         /// </summary>
-        public DateTime? EndLifeSpan { get; set; }
+        public DateTime? EndLifeSpanVersion { get; set; }
         /// <summary>
         /// Version number
         /// </summary>
         public int Version { get; set; }
-
+        #endregion
     }
 
     public abstract class Right:RRR

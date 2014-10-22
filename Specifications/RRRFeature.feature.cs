@@ -95,21 +95,26 @@ this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line 12
- testRunner.Given("Transaction No.\"TRN-001\" has party \"John Doe\" with role \"Grantee\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("Transaction No.\"TRN-001\" has target LAUnit \"Occupancy-LA-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 13
- testRunner.And("Transaction No.\"TRN-001\" has party \"Mark Twen\" with role \"Grantee\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("Transaction No.\"TRN-001\" has property with Uid = \"Property 1\" in LAUnit \"Occupanc" +
+                    "y-LA-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 14
- testRunner.And("Transaction No.\"TRN-001\" has target property with Uid = \"Property 1\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("Transaction No.\"TRN-001\" has party \"John Doe\" with role \"Grantee\" associated with" +
+                    " LAUnit \"Occupancy-LA-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 15
+ testRunner.And("Transaction No.\"TRN-001\" has party \"Mark Twen\" with role \"Grantee\" associated wit" +
+                    "h LAUnit \"Occupancy-LA-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 16
  testRunner.And("Transaction No.\"TRN-001\" target parties reference property with Uid = \"Property 1" +
                     "\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 16
- testRunner.When("transaction \"TRN-001\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 17
- testRunner.Then("Agains property \"Property 1\" registered 2 \"Occupancy\" rights", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.When("transaction \"TRN-001\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 18
- testRunner.And("Party \"John Doe\" have active \"Occupancy\" rights on \"Property 1\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.Then("Agains property \"Property 1\" registered 2 \"Occupancy\" rights", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 19
+ testRunner.And("Party \"John Doe\" have active \"Occupancy\" rights on \"Property 1\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 20
  testRunner.And("Party \"Mark Twen\" have active \"Occupancy\" rights on \"Property 1\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

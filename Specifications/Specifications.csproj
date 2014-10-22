@@ -68,6 +68,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>RRRFeature.feature</DependentUpon>
     </Compile>
+    <Compile Include="Subdivision.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Subdivision.feature</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -77,6 +82,10 @@
     <None Include="RRRFeature.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>RRRFeature.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Subdivision.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Subdivision.feature.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -31,11 +31,11 @@ namespace Ladm.DataModel
         /// </summary>
         public virtual ICollection<LAUnit> Properties { get; set; }
         /// <summary>
-        /// Target LAUnit UIds
+        /// Target LAUnit UIds (it's better to have attrib in LAUnit)
         /// </summary>
         public string TargetPropertiesIds{ get; set; }
         /// <summary>
-        /// Source LAUnit UIds
+        /// Source LAUnit UIds (it's better to have attrib in LAUnit)
         /// </summary>
         public string SourcePropertiesIds { get; set; }
 
@@ -49,7 +49,7 @@ namespace Ladm.DataModel
     /// </summary>
     public static class TransactionExtension
     {
-        public static List<LAUnit> GetPartyTargetLaUnit(this Transaction transaction, Party party)
+        public static IEnumerable<LAUnit> GetPartyTargetLaUnit(this Transaction transaction, Party party)
         {
             var result = new List<LAUnit>();
             if (transaction.Parties.Contains(party))
@@ -58,7 +58,8 @@ namespace Ladm.DataModel
                 {
                     var filter = party.TargetUIDs.Split(',');
                     result.AddRange(
-                        transaction.Properties.Where(item => filter.Contains(item.UId))
+                        //additional check if it put into target
+                        transaction.GetTransactionTargetLAUnits().Where(item => filter.Contains(item.Uid))
                     );
                 }
             }
@@ -103,8 +104,23 @@ namespace Ladm.DataModel
         private static IEnumerable<SpatialUnit> FilterPropertiesByIds(IEnumerable<LAUnit> source, string filter)
         {
             var ids = filter.Split(',');
-            var target = source.Where(item => ids.Contains(item.UId));
-            return target.SelectMany(laUnit => laUnit.Properties);
+            var target = source.Where(item => ids.Contains(item.Uid));
+            return target.SelectMany(laUnit => laUnit.SpatialUnits);
+        }
+
+        /// <summary>
+        /// Get Only Transaction Target LAUnits
+        /// </summary>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public static IEnumerable<LAUnit> GetTransactionTargetLAUnits(this Transaction transaction)
+        {
+            var result = new List<LAUnit>();            
+            if (string.IsNullOrEmpty(transaction.TargetPropertiesIds))
+                return result;            
+            var ids = transaction.TargetPropertiesIds.Split(',');            
+            result.AddRange(transaction.Properties.DefaultIfEmpty().ToList().Where(item => ids.Contains(item.Uid)));
+            return result;
         }
         #endregion
     }

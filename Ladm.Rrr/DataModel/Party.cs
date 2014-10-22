@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Ladm.DataModel
 {
+    /// <summary>
+    /// This is Party prototype to keep it simple (real one has references to Individuals/Organizations etc)
+    /// </summary>
     [Table("lr_party")]
     public class Party
     {

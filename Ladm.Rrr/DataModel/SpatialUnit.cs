@@ -16,8 +16,25 @@ namespace Ladm.DataModel
         public string SuId { get; set; }
 
         public float Area { get; set; }
+        /// <summary>
+        /// To keep subsets
+        /// </summary>
+        public virtual ICollection<SpatialUnit> Members { get; set; }
 
-        public virtual ICollection<SpatialUnit> Properties { get; set; }
+        #region Versionable attribs       
+        /// <summary>
+        /// Version start date
+        /// </summary>        
+        public DateTime? BeginLifeSpanVersion { get; set; }
+        /// <summary>
+        /// Version end date
+        /// </summary>
+        public DateTime? EndLifeSpanVersion { get; set; }
+        /// <summary>
+        /// Version number
+        /// </summary>
+        public int Version { get; set; }
+        #endregion    
     }
 
     public class Parcel:SpatialUnit

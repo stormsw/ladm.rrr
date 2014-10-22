@@ -76,16 +76,18 @@ namespace Ladm
         private static void completeCancelRegistration(Transaction transaction, LadmDbContext context)
         {
             var sourceSU = transaction.GetSourceProperties();
+            /// TODO: refactor
+            //context.Database.SqlQuery<RRR>("select r.* from la_rrr join where ")            
+#warning Wont work!            
+            var srcLa = context.LAUnit.Where(item => item.SpatialUnits.Intersect(sourceSU).Count() > 0);
 
-            var srcLa = context.LAUnit.Where(item => item.Properties.Intersect(sourceSU).Count() > 0);
-
-            var filteredRRR = context.RRRs.Where(item => srcLa.Contains(item.LAUnit));
+            var filteredRRR = context.RRRs.Where(item => srcLa.ToList().Contains(item.LAUnit));
             List<RRR> newRrrs = new List<RRR>();
             foreach (var item in filteredRRR)
             {
                 var rrr = (RRR)Activator.CreateInstance(item.GetType());
                 rrr.LAUnit = item.LAUnit;
-                item.EndLifeSpan = rrr.BeginLifeSpan = DateTime.Now;
+                item.EndLifeSpanVersion = rrr.BeginLifeSpanVersion = DateTime.Now;
                 rrr.Version = item.Version + 1;
 
                 /// sometimes we have request to get first of a kind!
@@ -123,8 +125,7 @@ namespace Ladm
         {
             var targetParties = transaction.Parties.Where(
                 party => transaction.TransactionType.TargetPartyRole.Equals(party.Role));
-
-            var TargetProperties = transaction.GetTargetProperties();
+            
             var rrrType = Type.GetType("Ladm.DataModel." + transaction.TransactionType.RightType);
             /// Ladm dont restrict amount of LAUnits
             /// normal registration assumes each transaction have single LAUnit
@@ -132,11 +133,14 @@ namespace Ladm
             foreach (var party in targetParties)
             {
                 var laUnits = transaction.GetPartyTargetLaUnit(party);
+                if (laUnits.Count() == 0)
+                    throw new ArgumentException("Can't proceed registration transaction w/o target properties assigned to target party.");
+
                 foreach (var laUnit in laUnits)
                 {
                     var rrr = (RRR)Activator.CreateInstance(rrrType);                    
                     rrr.Origin = rrr.CreatedBy = transaction;
-                    rrr.BeginLifeSpan = DateTime.Now;
+                    rrr.BeginLifeSpanVersion = DateTime.Now;
                     rrr.Party = party;
                     rrr.LAUnit = laUnit;
 

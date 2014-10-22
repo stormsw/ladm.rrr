@@ -22,9 +22,9 @@ namespace Ladm
         {
             var rrrs = (
                 from r in context.RRRs
-                where r.BeginLifeSpan != null
+                where r.BeginLifeSpanVersion != null
                     && (r.EndDate <= DateTime.Now || r.EndDate == null)
-                && r.LAUnit.Properties.Where(item => item.SuId == uid).Count() > 0
+                && r.LAUnit.SpatialUnits.DefaultIfEmpty().Where(item => item.SuId == uid).Count() > 0
                 && r.TypeName == rightType
                 select r);
             return rrrs;
@@ -34,9 +34,9 @@ namespace Ladm
         {
             var rrrs = (
                 from r in context.RRRs
-                where r.BeginLifeSpan != null
+                where r.BeginLifeSpanVersion != null
                     && (r.EndDate <= DateTime.Now || r.EndDate == null)
-                && r.LAUnit.Properties.Where(item => item.SuId == uid).Count() > 0
+                && r.LAUnit.SpatialUnits.DefaultIfEmpty().Where(item => item.SuId == uid).Count() > 0
                 select r);
             return rrrs;
         }

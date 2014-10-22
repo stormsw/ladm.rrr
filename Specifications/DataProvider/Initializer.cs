@@ -97,6 +97,16 @@ namespace Specifications.DataProvider
                         Label = "Cancel Mortgage",
                         TargetPartyRole = null
                     },
+
+                    new TransactionMetaData(){
+                        RightType = "Occupancy",
+                        Action = TransactionMetaData.ActionCode.Alter,
+                        Meta = TransactionMetaData.MetaCode.Registration,
+                        Code = "SUBS",
+                        Label = "Subdivision (Simple) - New properties only",
+                        TargetPartyRole = "Grantee"
+                    }
+                
                 };
 
                 context.TransactionMetaData.AddRange(tmd);
