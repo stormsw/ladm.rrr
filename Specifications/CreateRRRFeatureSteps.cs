@@ -11,7 +11,7 @@ namespace Specifications
     [Binding]
     public class CreateRRRFeatureSteps:IDisposable
     {
-        LadmDbContext dbContext = new LadmDbContext();
+        static SharedContext sharedContext = new SharedContext();
 
         [Given(@"Transaction No\.""(.*)"" has party ""(.*)"" with role ""(.*)""")]
         public void GivenTransactionNo_HasPartyWithRole(string transactionNumber, string fullName, string partyRole)
@@ -64,15 +64,21 @@ namespace Specifications
                 Assert.NotNull(transaction);
 
                 var property = transaction.Properties.SelectMany(item => item.Properties).Where(su => su.SuId == uid).FirstOrDefault();
+                /// wether already added
                 if (property == null)
                 {
-                    var newProperty = new Parcel()
+                    /// wether exists in db
+                    /// 
+                    property = (from p in context.SpatialUnits where p.SuId==uid select p).FirstOrDefault();
+                    if (property == null)
                     {
-                        Area = 1,
-                        SuId = uid
-                    };
-
-                    transaction.Properties.Add(new LAUnit() { UId = "bbb", Properties = new List<SpatialUnit>() { newProperty } });
+                        property = new Parcel()
+                        {
+                            Area = 1,
+                            SuId = uid
+                        };
+                    }
+                    transaction.Properties.Add(new LAUnit() { UId = "bbb", Properties = new List<SpatialUnit>() { property } });
                     transaction.TargetPropertiesIds = "bbb";
                 }
 
@@ -83,16 +89,47 @@ namespace Specifications
         [Then(@"Agains property ""(.*)"" registered (.*) ""(.*)"" rights")]
         public void ThenAgainsPropertyRegisteredRights(string uid, int count, string rightType)
         {
+            ///TODO: refator out RRRMeta to Entity classes detection
             using (var context = new LadmDbContext())
             {
-                var rrrs = (
-                    from r in context.RRRs 
-                        where r.BeginLifeSpan!=null 
-                            && (r.EndDate<=DateTime.Now || r.EndDate==null)
-                            && r.Type.RightType==rightType
-                        && r.LAUnit.Properties.Where(item=>item.SuId==uid).Count()>0 select r).Count();
-                Assert.Equal(count, rrrs);
+                var rrrs = ActiveRRRsOnSpatialUnitsByUidAndRightType(uid,rightType, context);                
+                Assert.Equal(count, rrrs.Count());
             }
+        }
+
+        public static IEnumerable<RRR> FilterRRRsByRight(IEnumerable<RRR> rrrs, string rightType)
+        {
+            return rrrs.Where(r => r.TypeName == rightType);
+        }
+        /// <summary>
+        /// This is not DRY but get filtered res on DS side
+        /// Alternatively we may populate data from ActiveRRRsOnSpatialUnitsByUid and enumerate it, then add this filter on local data
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="rightType"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private static IEnumerable<RRR> ActiveRRRsOnSpatialUnitsByUidAndRightType(string uid, string rightType, LadmDbContext context)
+        {
+            var rrrs = (
+                from r in context.RRRs
+                where r.BeginLifeSpan != null
+                    && (r.EndDate <= DateTime.Now || r.EndDate == null)
+                && r.LAUnit.Properties.Where(item => item.SuId == uid).Count() > 0
+                && r.TypeName  == rightType
+                select r);
+            return rrrs;
+        }
+
+        private static IEnumerable<RRR> ActiveRRRsOnSpatialUnitsByUid(string uid, LadmDbContext context)
+        {
+            var rrrs = (
+                from r in context.RRRs
+                where r.BeginLifeSpan != null
+                    && (r.EndDate <= DateTime.Now || r.EndDate == null)
+                && r.LAUnit.Properties.Where(item => item.SuId == uid).Count() > 0
+                select r);
+            return rrrs;
         }
 
         [Then(@"Party ""(.*)"" have active ""(.*)"" rights on ""(.*)""")]
@@ -100,12 +137,9 @@ namespace Specifications
         {
             using (var context = new LadmDbContext())
             {
-                var rrr = (from r in context.RRRs where r.BeginLifeSpan!=null
-                           && (r.EndDate <= DateTime.Now || r.EndDate == null)
-                               && r.Type.RightType==rightType 
-                               && r.LAUnit.Properties.Where(item=>item.SuId==uid).Count()>0 select r
-                               ).Count();
-                Assert.True(rrr > 0);
+                var result = ActiveRRRsOnSpatialUnitsByUidAndRightType(uid,rightType, context).ToList().
+                    Where(r => r.Party.FullName == fullName).Count();
+                Assert.True(result > 0);
             }
         }
 
@@ -123,7 +157,7 @@ namespace Specifications
         }
 
         [Given(@"Registration transaction ""(.*)"" with No\.""(.*)""")]
-        public void GivenRegistrationTransactionWithNo_(string transactionCode, string transactionNumber)
+        public void GivenRegistrationTransactionWithNo(string transactionCode, string transactionNumber)
         {
             using(var context = new LadmDbContext())
             {
@@ -210,7 +244,7 @@ namespace Specifications
         #region Technical magics
         public void Dispose()
         {
-            dbContext.Dispose();
+            sharedContext.Dispose();
         }
         #endregion
     }

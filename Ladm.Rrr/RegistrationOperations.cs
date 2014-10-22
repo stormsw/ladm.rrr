@@ -134,7 +134,7 @@ namespace Ladm
                 var laUnits = transaction.GetPartyTargetLaUnit(party);
                 foreach (var laUnit in laUnits)
                 {
-                    var rrr = (RRR)Activator.CreateInstance(rrrType);
+                    var rrr = (RRR)Activator.CreateInstance(rrrType);                    
                     rrr.Origin = rrr.CreatedBy = transaction;
                     rrr.BeginLifeSpan = DateTime.Now;
                     rrr.Party = party;

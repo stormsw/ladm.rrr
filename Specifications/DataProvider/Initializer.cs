@@ -17,6 +17,30 @@ namespace Specifications.DataProvider
             protected override void Seed(LadmDbContext context)
             {
                 //sample data
+                IList<RRRMetaData> rmd = new List<RRRMetaData>()
+                {
+                    new RRRMetaData()
+                    {
+                        RightType = "Occupancy"
+                    },
+                    new RRRMetaData()
+                    {
+                        RightType = "Mortgage"
+                    },
+                    new RRRMetaData()
+                    {
+                        RightType = "Lease"
+                    },
+                    new RRRMetaData()
+                    {
+                        RightType = "Caveat"
+                    },
+                    new RRRMetaData()
+                    {
+                        RightType = "Attorney"
+                    }
+                };
+
                 IList<TransactionMetaData> tmd = new List<TransactionMetaData>()
                 {
                     /// Occupancy
@@ -26,7 +50,7 @@ namespace Specifications.DataProvider
                         Meta = TransactionMetaData.MetaCode.Registration,
                         Code = "REGO",
                         Label = "Register Occupancy",
-                        TargetPartyRole = "Grantee"                       
+                        TargetPartyRole = "Grantee",                        
                     },
 
                     new TransactionMetaData(){

@@ -59,7 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="SharedContext.cs" />
     <Compile Include="CreateRRRFeatureSteps.cs" />
     <Compile Include="DataProvider\Initializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,7 +70,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="RRRFeature.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

@@ -17,7 +17,9 @@ namespace Ladm.DataModel
         /// Additional aspect
         /// </summary>
         [Obsolete("RRR concrete class have to be enouh!")]
-        public virtual RRRMetaData Type { get; set; }
+        public virtual RRRMetaData MetaType { get; set; }
+        [Obsolete("Temporary while class selectors been implemented")]
+        public string TypeName { get; set; }
         /// <summary>
         /// Container for properties
         /// </summary>
@@ -88,27 +90,44 @@ namespace Ladm.DataModel
 #region Configuration generation part
     public class Occupancy:Right
     {
-
+        public Occupancy():base()
+        {
+            TypeName = "Occupancy";
+        }
     }
 
     public class Mortgage:Right
     {
+        public Mortgage():base()
+        {
+            TypeName = "Mortgage";
+        }
 
     }
 
     public class Lease:Right
     {
-
+        public Lease():base()
+        {
+            TypeName = "Lease";
+        }
     }
 
     public class Consent:Responsibility
     {
-
+        public Consent():base()
+        {
+            TypeName = "Consent";
+        }
     }
 
     public class Caveat:Restriction
     {
-
+        public Caveat()
+            : base()
+        {
+            TypeName = "Caveat";
+        }
     }
 #endregion
 }
