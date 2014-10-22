@@ -149,9 +149,12 @@ namespace Specifications
         {
             using (var context = new LadmDbContext())
             {
-
-                var parcel = new Parcel() { SuId = uid.ToString() };
-                context.SpatialUnits.Add(parcel);
+                var parcel = (from p in context.SpatialUnits where p.SuId==uid select p).FirstOrDefault();
+                if (parcel == null)
+                {
+                    parcel = new Parcel() { SuId = uid.ToString() };
+                    context.SpatialUnits.Add(parcel);
+                }
                 context.SaveChanges();
             }
         }
