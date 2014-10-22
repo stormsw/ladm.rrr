@@ -92,44 +92,9 @@ namespace Specifications
             ///TODO: refator out RRRMeta to Entity classes detection
             using (var context = new LadmDbContext())
             {
-                var rrrs = ActiveRRRsOnSpatialUnitsByUidAndRightType(uid,rightType, context);                
+                var rrrs = Ladm.DataModelHelper.GetActiveSpatialUnitInterestsByRightType(uid,rightType, context);                
                 Assert.Equal(count, rrrs.Count());
             }
-        }
-
-        public static IEnumerable<RRR> FilterRRRsByRight(IEnumerable<RRR> rrrs, string rightType)
-        {
-            return rrrs.Where(r => r.TypeName == rightType);
-        }
-        /// <summary>
-        /// This is not DRY but get filtered res on DS side
-        /// Alternatively we may populate data from ActiveRRRsOnSpatialUnitsByUid and enumerate it, then add this filter on local data
-        /// </summary>
-        /// <param name="uid"></param>
-        /// <param name="rightType"></param>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        private static IEnumerable<RRR> ActiveRRRsOnSpatialUnitsByUidAndRightType(string uid, string rightType, LadmDbContext context)
-        {
-            var rrrs = (
-                from r in context.RRRs
-                where r.BeginLifeSpan != null
-                    && (r.EndDate <= DateTime.Now || r.EndDate == null)
-                && r.LAUnit.Properties.Where(item => item.SuId == uid).Count() > 0
-                && r.TypeName  == rightType
-                select r);
-            return rrrs;
-        }
-
-        private static IEnumerable<RRR> ActiveRRRsOnSpatialUnitsByUid(string uid, LadmDbContext context)
-        {
-            var rrrs = (
-                from r in context.RRRs
-                where r.BeginLifeSpan != null
-                    && (r.EndDate <= DateTime.Now || r.EndDate == null)
-                && r.LAUnit.Properties.Where(item => item.SuId == uid).Count() > 0
-                select r);
-            return rrrs;
         }
 
         [Then(@"Party ""(.*)"" have active ""(.*)"" rights on ""(.*)""")]
@@ -137,7 +102,7 @@ namespace Specifications
         {
             using (var context = new LadmDbContext())
             {
-                var result = ActiveRRRsOnSpatialUnitsByUidAndRightType(uid,rightType, context).ToList().
+                var result = Ladm.DataModelHelper.GetActiveSpatialUnitInterestsByRightType(uid, rightType, context).ToList().
                     Where(r => r.Party.FullName == fullName).Count();
                 Assert.True(result > 0);
             }

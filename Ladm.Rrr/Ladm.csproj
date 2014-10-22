@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataModelHelper.cs" />
     <Compile Include="DataModel\LadmDBContext.cs" />
     <Compile Include="DataModel\LAUnit.cs" />
     <Compile Include="DataModel\Party.cs" />
