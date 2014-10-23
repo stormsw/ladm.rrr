@@ -1,5 +1,6 @@
 ﻿using Ladm.DataModel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -69,7 +70,8 @@ namespace Ladm
             }
         }
         /// <summary>
-        /// For each target properties of transaction cancel RRR of transaction right type
+        /// For each properties of transaction cancel RRR of transaction right type
+        /// (at usual it's no sence with target separation in regular and cancellation transactions)
         /// </summary>
         /// <param name="transaction"></param>
         /// <param name="context"></param>
@@ -77,34 +79,48 @@ namespace Ladm
         {
             var sourceSU = transaction.GetSourceProperties();
             /// TODO: refactor
-            //context.Database.SqlQuery<RRR>("select r.* from la_rrr join where ")            
-#warning Wont work!            
-            var srcLa = context.LAUnit.Where(item => item.SpatialUnits.Intersect(sourceSU).Count() > 0);
+            /// select rrr join rrr.lauintid la join la.spatialunits su where su.suid in(...)
 
-            var filteredRRR = context.RRRs.Where(item => srcLa.ToList().Contains(item.LAUnit));
-            List<RRR> newRrrs = new List<RRR>();
-            foreach (var item in filteredRRR)
+            var filter = transaction.Properties.SelectMany(la => la.SpatialUnits).ToList().ConvertAll<string>(item => item.SuId);
+
+            List<RRR> affected = new List<RRR>();
+            var allActiveRRR = context.RRRs.Where(activeRRR => activeRRR.BeginLifeSpanVersion != null
+                                             && activeRRR.EndLifeSpanVersion == null
+                //assume work with own rrr type
+                                             && activeRRR.TypeName == transaction.TransactionType.RightType                          
+                                             );
+            // if need su=RRR we may go    
+            //Dictionary<string, RRR> suid2RRR = new Dictionary<string, RRR>();
+            allActiveRRR.Select(activeR=>new {Right = activeR, SpatialUnits = activeR.LAUnit.SpatialUnits}).ToList().
+                ForEach(dynoR2S=>                
+                                dynoR2S.SpatialUnits.DefaultIfEmpty().Where(c => filter.Contains(c.SuId)).ToList()
+                                        .ForEach(su=>affected.Add(dynoR2S.Right)
+                                            // if need su=RRR we may go    
+                                            //suid2RRR[su.SuId] = dynoR2S.Right
+                                               ));
+
+            foreach (var oldRRR in affected)
             {
-                var rrr = (RRR)Activator.CreateInstance(item.GetType());
-                rrr.LAUnit = item.LAUnit;
-                item.EndLifeSpanVersion = rrr.BeginLifeSpanVersion = DateTime.Now;
-                rrr.Version = item.Version + 1;
+                var newRRR = (RRR)Activator.CreateInstance(oldRRR.GetType());
+                newRRR.LAUnit = oldRRR.LAUnit;
+                oldRRR.EndLifeSpanVersion = newRRR.BeginLifeSpanVersion = DateTime.Now;
+                newRRR.Version = oldRRR.Version + 1;
 
                 /// sometimes we have request to get first of a kind!
-                rrr.Origin = item.Origin;
+                newRRR.Origin = oldRRR.Origin;
                 /// inherite creator
-                rrr.CreatedBy = item.CreatedBy;
+                newRRR.CreatedBy = oldRRR.CreatedBy;
 
-                rrr.CanExpire = item.CanExpire;
-                rrr.ExpirationDate = transaction.ExpirationDate;
-                rrr.EndDate = transaction.EndDate;
+                newRRR.CanExpire = oldRRR.CanExpire;
+                newRRR.ExpirationDate = oldRRR.ExpirationDate;
+                newRRR.StartDate = oldRRR.StartDate;
+                newRRR.EndDate = DateTime.Now;
                 /// mark by me
-                rrr.CancelledBy = transaction;
+                newRRR.CancelledBy = transaction;
 
-                newRrrs.Add(rrr);
+                context.RRRs.Add(newRRR);
             }
 
-            context.RRRs.AddRange(newRrrs);
         }
         /// <summary>
         /// Simplest way supposes to cancel old and create new

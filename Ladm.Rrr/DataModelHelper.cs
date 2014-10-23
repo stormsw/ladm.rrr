@@ -29,14 +29,24 @@ namespace Ladm
                 select r);
             return rrrs;
         }
-        
-        public static IEnumerable<RRR> GetAllActiveSpatialUnitsInterests(string uid, LadmDbContext context)
+
+        public static IEnumerable<RRR> GetAllActiveSpatialUnitsInterests(string suid, LadmDbContext context)
         {
             var rrrs = (
                 from r in context.RRRs
-                where r.BeginLifeSpanVersion != null
-                    && (r.EndDate <= DateTime.Now || r.EndDate == null)
-                && r.LAUnit.SpatialUnits.DefaultIfEmpty().Where(item => item.SuId == uid).Count() > 0
+                where r.BeginLifeSpanVersion != null && r.EndLifeSpanVersion == null      
+                && r.LAUnit.SpatialUnits.DefaultIfEmpty().Where(item => item.SuId == suid).Count() > 0
+                select r);
+            return rrrs;
+        }
+
+        public static IEnumerable<RRR> GetAllValidSpatialUnitsInterests(string suid, LadmDbContext context)
+        {
+            var rrrs = (
+                from r in context.RRRs
+                where r.BeginLifeSpanVersion != null && r.EndLifeSpanVersion==null
+                && r.StartDate <= DateTime.Now && (r.EndDate >= DateTime.Now || r.EndDate == null)
+                && r.LAUnit.SpatialUnits.DefaultIfEmpty().Where(item => item.SuId == suid).Count() > 0
                 select r);
             return rrrs;
         }

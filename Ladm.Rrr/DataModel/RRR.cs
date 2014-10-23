@@ -31,14 +31,17 @@ namespace Ladm.DataModel
         /// <summary>
         /// Transaction created RRR
         /// </summary>
+        [Column("transaction_source")]
         public virtual Transaction CreatedBy { get; set; }
         /// <summary>
         /// Helper to address first created transaction
         /// </summary>
+        [Column("transaction_origin")]
         public virtual Transaction Origin { get; set; }
         /// <summary>
         /// Cancellation info
         /// </summary>
+        [Column("transaction_cancel")]
         public virtual Transaction CancelledBy { get; set; }
         /// <summary>
         /// RRR Valid from
@@ -60,10 +63,12 @@ namespace Ladm.DataModel
         /// <summary>
         /// Version start date
         /// </summary>        
+        [Column("begin_lifespan_version")]
         public DateTime? BeginLifeSpanVersion { get; set; }
         /// <summary>
         /// Version end date
         /// </summary>
+        [Column("end_lifespan_version")]
         public DateTime? EndLifeSpanVersion { get; set; }
         /// <summary>
         /// Version number
