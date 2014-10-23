@@ -60,7 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SharedContext.cs" />
-    <Compile Include="CreateRRRFeatureSteps.cs" />
+    <Compile Include="RRRFeatureSteps.cs" />
     <Compile Include="DataProvider\Initializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RRRFeature.feature.cs">

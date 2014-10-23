@@ -2,13 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ladm
 {
-    public class DataModelHelper
-    {        
+    public static class DataModelHelper
+    {
         /// <summary>
         /// This method returns active registered RRR object agianst spatial unid filtered by specified right type
         /// This is not DRY but get filtered res on DS side
@@ -34,7 +32,7 @@ namespace Ladm
         {
             var rrrs = (
                 from r in context.RRRs
-                where r.BeginLifeSpanVersion != null && r.EndLifeSpanVersion == null      
+                where r.BeginLifeSpanVersion != null && r.EndLifeSpanVersion == null
                 && r.LAUnit.SpatialUnits.DefaultIfEmpty().Where(item => item.SuId == suid).Count() > 0
                 select r);
             return rrrs;
@@ -44,12 +42,13 @@ namespace Ladm
         {
             var rrrs = (
                 from r in context.RRRs
-                where r.BeginLifeSpanVersion != null && r.EndLifeSpanVersion==null
+                where r.BeginLifeSpanVersion != null && r.EndLifeSpanVersion == null
                 && r.StartDate <= DateTime.Now && (r.EndDate >= DateTime.Now || r.EndDate == null)
                 && r.LAUnit.SpatialUnits.DefaultIfEmpty().Where(item => item.SuId == suid).Count() > 0
                 select r);
             return rrrs;
         }
+
         /// <summary>
         /// Additional filter, make sure source dataset from EF is enumerated
         /// </summary>
@@ -60,6 +59,18 @@ namespace Ladm
         {
             /// dont like to have there rrrs.ToList()
             return rrrs.Where(r => r.TypeName == rightType);
+        }
+
+        /// <summary>
+        /// Get all interests cancelled by this transaction
+        /// </summary>
+        /// <param name="transaction"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static List<RRR> CancelledRights(this Transaction transaction, LadmDbContext context)
+        {
+            var rrr = (from r in context.RRRs where r.CancelledBy.Id == transaction.Id select r).ToList();
+            return rrr;
         }
     }
 }

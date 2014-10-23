@@ -111,7 +111,7 @@ this.FeatureBackground();
 #line 17
  testRunner.When("transaction \"TRN-001\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 18
- testRunner.Then("Agains property \"Property 1\" registered 2 \"Occupancy\" rights", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("Against property \"Property 1\" registered 2 \"Occupancy\" rights", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 19
  testRunner.And("Party \"John Doe\" have active \"Occupancy\" rights on \"Property 1\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 20
