@@ -134,6 +134,12 @@ this.FeatureBackground();
                     "th LAUnit \"Occupancy-LA-04\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 30
  testRunner.When("transaction \"TRN-003\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 31
+ testRunner.Then("Cancelled by \"TRN-003\" 2 \"Occupancy\" rights", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 32
+ testRunner.And("Party \"Tim Taler\" have active \"Occupancy\" rights on \"Property 3\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 33
+ testRunner.And("Party \"Sara Taler\" have active \"Occupancy\" rights on \"Property 4\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

@@ -28,3 +28,6 @@ Scenario: Subdivision produces 2 new properties and no additional interests regi
 	And Transaction No."TRN-003" has party "Tim Taler" with role "Grantee" associated with LAUnit "Occupancy-LA-03"
 	And Transaction No."TRN-003" has party "Sara Taler" with role "Grantee" associated with LAUnit "Occupancy-LA-04"
 	When transaction "TRN-003" is completed
+	Then Cancelled by "TRN-003" 2 "Occupancy" rights
+	And Party "Tim Taler" have active "Occupancy" rights on "Property 3"
+	And Party "Sara Taler" have active "Occupancy" rights on "Property 4"

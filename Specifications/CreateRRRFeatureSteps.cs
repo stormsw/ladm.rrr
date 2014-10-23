@@ -254,6 +254,25 @@ namespace Specifications
             }
         }
 
+        [Then(@"Cancelled by ""(.*)"" (.*) ""(.*)"" rights")]
+        public void ThenCancelledByRights(string transactionNumber, int total, string rightType)
+        {
+            using (var context = new LadmDbContext())
+            {
+                var transaction = (from t in context.Transactions where t.TransactionNumber == transactionNumber select t).FirstOrDefault();
+                Assert.NotNull(transaction);
+                Assert.Equal(transaction.Status, Transaction.TransactionStatus.Completed);
+
+                var rrr = (from r in context.RRRs where r.CancelledBy .Id== transaction.Id select r).ToList();
+                foreach (var r in rrr)
+                {
+                    Assert.Equal(r.TypeName,rightType);
+                }
+                Assert.Equal(total, rrr.Count());
+            }            
+        }
+
+
         #region Technical magics
         /// <summary>
         /// Get or create transaction Party by FullName
