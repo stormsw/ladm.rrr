@@ -11,9 +11,9 @@ namespace Specifications
     [Binding]
     public class RRRFeatureSteps : IDisposable
     {
-        private static SharedContext sharedContext = new SharedContext();
+        private static SharedContext sharedContext = SharedContext.GetInstance();
 
-        [Given(@"Transaction No\.""(.*)"" has party ""(.*)"" with role ""(.*)"" associated with LAUnit ""(.*)""")]
+        [Given(@"Transaction No""(.*)"" has party ""(.*)"" with role ""(.*)"" associated with LAUnit ""(.*)""")]
         public void GivenTransactionNo_HasPartyWithRole(string transactionNumber, string fullName, string partyRole, string uid)
         {
             using (var context = new LadmDbContext())
@@ -28,7 +28,7 @@ namespace Specifications
             }
         }
 
-        [Given(@"Transaction No\.""(.*)"" target parties reference property with Uid = ""(.*)""")]
+        [Given(@"Transaction No""(.*)"" target parties reference property with Uid = ""(.*)""")]
         public void GivenAllTargetPartiesReferencePropertyWithUid(string transactionNumber, string uid)
         {
             using (var context = new LadmDbContext())
@@ -42,7 +42,7 @@ namespace Specifications
             }
         }
 
-        [Given(@"Transaction No\.""(.*)"" has target LAUnit ""(.*)""")]
+        [Given(@"Transaction No""(.*)"" has target LAUnit ""(.*)""")]
         public void GivenTransactionNo_HasTargetLAUnit(string transactionNumber, string uid)
         {
             using (var context = new LadmDbContext())
@@ -55,6 +55,7 @@ namespace Specifications
                 {
                     launit = new LAUnit() { SpatialUnits = new List<SpatialUnit>() };
                     transaction.Properties.Add(launit);
+                    context.LAUnit.Add(launit);
                 }
                 launit.Uid = uid;
 
@@ -69,7 +70,7 @@ namespace Specifications
             }
         }
 
-        [Given(@"Transaction No\.""(.*)"" has source LAUnit ""(.*)""")]
+        [Given(@"Transaction No""(.*)"" has source LAUnit ""(.*)""")]
         public void GivenTransactionNo_HasSourceLAUnit(string transactionNumber, string uid)
         {
             using (var context = new LadmDbContext())
@@ -92,7 +93,7 @@ namespace Specifications
             }
         }
 
-        [Given(@"Transaction No\.""(.*)"" has property with Uid = ""(.*)"" in LAUnit ""(.*)""")]
+        [Given(@"Transaction No""(.*)"" has property with Uid = ""(.*)"" in LAUnit ""(.*)""")]
         public void GivenTransactionNo_HasTargetPropertyWithUid(string transactionNumber, string suid, string la_uid)
         {
             using (var context = new LadmDbContext())
@@ -116,8 +117,13 @@ namespace Specifications
                                 where p.SuId == suid
                                     && p.BeginLifeSpanVersion != null
                                     && p.EndLifeSpanVersion == null
-                                select p).FirstOrDefault()
-                                ?? new Parcel() { Area = 1, SuId = suid };
+                                select p).FirstOrDefault();
+                    /// otherwise create new
+                    if (property == null)
+                    {
+                        property = new Parcel() { Area = 1, SuId = suid,Status = SpatialUnit.SpatialUnitStatus.New };
+                        context.SpatialUnits.Add(property);
+                    }
 
                     if (launit.SpatialUnits == null)
                     {
@@ -161,9 +167,27 @@ namespace Specifications
                 var parcel = (from p in context.SpatialUnits where p.SuId == uid select p).FirstOrDefault();
                 if (parcel == null)
                 {
-                    parcel = new Parcel() { SuId = uid.ToString(), Area = 100500, Status = SpatialUnit.SpatialUnitStatus.Normal, Version = 1, BeginLifeSpanVersion = DateTime.Now };
+                    parcel = new Parcel() { 
+                        SuId = uid.ToString(), 
+                        Status = SpatialUnit.SpatialUnitStatus.Normal, 
+                        Area = 100, 
+                        BeginLifeSpanVersion = DateTime.Now, 
+                        Version = 1 };
                     context.SpatialUnits.Add(parcel);
                 }
+                context.SaveChanges();
+            }
+        }
+
+        [Given(@"Registration transaction ""(.*)"" with No\.""(.*)"" is set current")]
+        public void GivenRegistrationTransactionWithNo_IsSetCurrent(string transactionCode, string transactionNumber)
+        {
+            using (var context = new LadmDbContext())
+            {
+                var transaction = NewTransaction(transactionCode, transactionNumber, context);
+                sharedContext.TransactionsHash.Add(new KeyValuePair<string,Transaction>(transactionNumber,transaction));
+                sharedContext.CurrentTransaction = transaction;
+                context.Transactions.Add(transaction);
                 context.SaveChanges();
             }
         }
@@ -173,21 +197,27 @@ namespace Specifications
         {
             using (var context = new LadmDbContext())
             {
+                var transaction = NewTransaction(transactionCode, transactionNumber, context);
+
+                context.Transactions.Add(transaction);
+                context.SaveChanges();
+            }
+        }
+
+        private static Transaction NewTransaction(string transactionCode, string transactionNumber, LadmDbContext context)
+        {
                 TransactionMetaData trType = context.TransactionMetaData.Where(item => item.Code == transactionCode).Single();
                 //from tmd in context.TransactionMetaData where tmd.code = transactionCode select tmd;
-
                 var transaction = new Transaction()
                 {
                     TransactionNumber = transactionNumber,
                     RegistrationDate = DateTime.Now,
                     StartDate = DateTime.Now,
                     TransactionType = trType,
+                Status = Transaction.TransactionStatus.Lodged
                 };
-
-                context.Transactions.Add(transaction);
-                context.SaveChanges();
+            return transaction;
             }
-        }
 
         [Obsolete("Dont create hanged parties!", true)]
         [Given(@"Party ""(.*)"" with role ""(.*)""")]
@@ -209,40 +239,7 @@ namespace Specifications
                 context.SaveChanges();
             }
         }
-/*
-        [Given(@"Registration Transaction with No\.""(.*)"" for ""(.*)"" right")]
-        public void GivenRegistrationTransactionWithNo_ForRight(string transactionNumber, string rightType)
-        {
-            using (var context = new LadmDbContext())
-            {
-                var query = (from t in context.TransactionMetaData
-                             where (
-                                 t.RightType == rightType
-                                 && t.Meta == TransactionMetaData.MetaCode.Registration
-                                 && t.Action == TransactionMetaData.ActionCode.Create
-                            )
-                             select t).FirstOrDefault();
 
-                var tm = context.TransactionMetaData.Where(item => item.Action == TransactionMetaData.ActionCode.Create
-                    && item.Meta == TransactionMetaData.MetaCode.Registration
-                    && item.RightType == rightType).FirstOrDefault();
-
-                Assert.NotNull(tm);
-
-                var transaction = new Transaction()
-                {
-                    Status = Transaction.TransactionStatus.Lodged,
-                    StartDate = DateTime.Now,
-                    TransactionNumber = transactionNumber,
-                    TransactionType = tm
-                };
-
-                context.Transactions.Add(transaction);
-
-                context.SaveChanges();
-            }
-        }
-//*/
         [When(@"transaction ""(.*)"" is completed")]
         public void WhenTransactionIsCompleted(string transactionNumber)
         {
@@ -272,6 +269,32 @@ namespace Specifications
                 Assert.Equal(total, rrr.Count());
             }
         }
+
+        [Given(@"Property ""(.*)"" in Transaction No""(.*)"" Status set ""(.*)""")]
+        public void GivenPropertyInTransactionNo_StatusSet(string uid, string transactionNumber, string state)
+        {
+            using (var context = new LadmDbContext())
+            {
+                var transaction = (from t in context.Transactions where t.TransactionNumber == transactionNumber select t).FirstOrDefault();
+                Assert.NotNull(transaction);
+                Assert.NotNull(transaction.Properties);
+                //single will throw ex if != 1 found
+                var property = transaction.Properties.SelectMany(la => la.SpatialUnits).Single(su => su.SuId == uid);
+                property.Status = SpatialUnit.SpatialUnitStatus.Archived;
+                context.SaveChanges();
+            }
+        }
+
+        [Then(@"Property ""(.*)"" is archived")]
+        public void ThenPropertyIsArchived(string p0)
+        {
+            using (var context = new LadmDbContext())
+            {
+                var property = (from su in context.SpatialUnits where su.SuId == p0 && su.Status == SpatialUnit.SpatialUnitStatus.Archived select su).Single();
+                Assert.NotNull(property);
+            }
+        }
+
         #region Technical magics
 
         /// <summary>
