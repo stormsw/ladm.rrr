@@ -93,7 +93,7 @@ namespace Ladm
             //Dictionary<string, RRR> suid2RRR = new Dictionary<string, RRR>();
             allActiveRRR.Select(activeR=>new {Right = activeR, SpatialUnits = activeR.LAUnit.SpatialUnits}).ToList().
                 ForEach(dynoR2S=>                
-                                dynoR2S.SpatialUnits.DefaultIfEmpty().Where(c => filter.Contains(c.SuId)).ToList()
+                                (dynoR2S.SpatialUnits??Enumerable.Empty<SpatialUnit>()).Where(c => filter.Contains(c.SuId)).ToList()
                                         .ForEach(su=>affected.Add(dynoR2S.Right)
                                             // if need su=RRR we may go    
                                             //suid2RRR[su.SuId] = dynoR2S.Right
@@ -120,7 +120,6 @@ namespace Ladm
 
                 context.RRRs.Add(newRRR);
             }
-
         }
         /// <summary>
         /// Simplest way supposes to cancel old and create new
@@ -151,9 +150,12 @@ namespace Ladm
                 var laUnits = transaction.GetPartyTargetLaUnit(party);
                 if (laUnits.Count() == 0)
                     throw new ArgumentException("Can't proceed registration transaction w/o target properties assigned to target party.");
-
+                /// we have to process new SU there and update them
                 foreach (var laUnit in laUnits)
                 {
+                    laUnit.SpatialUnits.ToList().Where(su => su.Status == SpatialUnit.SpatialUnitStatus.New).ToList().
+                        ForEach(newSU => newSU.BeginLifeSpanVersion = DateTime.Now);
+
                     var rrr = (RRR)Activator.CreateInstance(rrrType);                    
                     rrr.Origin = rrr.CreatedBy = transaction;
                     rrr.BeginLifeSpanVersion = DateTime.Now;
