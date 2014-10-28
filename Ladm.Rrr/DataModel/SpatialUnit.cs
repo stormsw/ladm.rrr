@@ -11,17 +11,17 @@ namespace Ladm.DataModel
     [Table("lr_spatial_unit")]
     public abstract class SpatialUnit
     {
+        public enum SpatialUnitStatus { New, Busy, Normal, Archived };
         [Key]
         public int Id { get; set; }
         public string SuId { get; set; }
-
         public float Area { get; set; }
+        public SpatialUnitStatus Status { get; set; }
         /// <summary>
         /// To keep subsets
         /// </summary>
         public virtual ICollection<SpatialUnit> Members { get; set; }
-
-        #region Versionable attribs       
+        #region Versionable attribs
         /// <summary>
         /// Version start date
         /// </summary>        
@@ -34,7 +34,11 @@ namespace Ladm.DataModel
         /// Version number
         /// </summary>
         public int Version { get; set; }
-        #endregion    
+        #endregion
+        protected SpatialUnit()
+        {
+            Status = SpatialUnitStatus.New;
+        }
     }
 
     public class Parcel:SpatialUnit
