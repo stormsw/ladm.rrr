@@ -11,11 +11,11 @@ namespace Example1
     {
         static void Main(string[] args)
         {
-            using (var context = new Ladm.DataModel.LadmDbContext())
+            using (var ctx = new Ladm.DataModel.LadmDbContext())
             {
                 Transaction transaction = new Transaction() { TransactionNumber = "TRN-0001", TransactionType = new TransactionMetaData() { Code="TRN" } };
-                context.Transactions.Add(transaction);
-                context.SaveChanges();
+                ctx.Transactions.Add(transaction);
+                ctx.SaveChanges();
             }
         }
     }
