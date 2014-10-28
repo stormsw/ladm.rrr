@@ -68,6 +68,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>RRRFeature.feature</DependentUpon>
     </Compile>
+    <Compile Include="SpecflowHooks.cs" />
     <Compile Include="Subdivision.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
