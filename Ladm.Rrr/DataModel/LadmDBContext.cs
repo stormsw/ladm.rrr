@@ -19,7 +19,7 @@ namespace Ladm.DataModel
 
         public LadmDbContext():base("LadmDbConnectionString")
         {
-            // TODO: remove and use Appconfig
+            // FIXED: remove and use Appconfig
             //Database.SetInitializer<LadmDbContext>(new CreateDatabaseIfNotExists<LadmDbContext>());
             //Database.SetInitializer<LadmDbContext>(new DropCreateDatabaseIfModelChanges<LadmDbContext>());
             //Database.SetInitializer<LadmDbContext>(new DropCreateDatabaseAlways<LadmDbContext>());           
