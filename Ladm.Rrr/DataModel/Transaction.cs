@@ -122,6 +122,22 @@ namespace Ladm.DataModel
             result.AddRange(transaction.Properties.DefaultIfEmpty().ToList().Where(item => ids.Contains(item.Uid)));
             return result;
         }
+
+        /// <summary>
+        /// Get Only Transaction Source LAUnits (req for mutation)
+        /// </summary>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public static IEnumerable<LAUnit> GetTransactionSourceLAUnits(this Transaction transaction)
+        {
+            var result = new List<LAUnit>();
+            if (string.IsNullOrEmpty(transaction.SourcePropertiesIds))
+                return result;
+            var ids = transaction.SourcePropertiesIds.Split(',');
+            result.AddRange(transaction.Properties.DefaultIfEmpty().ToList().Where(item => ids.Contains(item.Uid)));
+            return result;
+        }
+        
         #endregion
     }
 }
