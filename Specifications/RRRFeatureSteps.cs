@@ -161,7 +161,7 @@ namespace Specifications
                 var parcel = (from p in context.SpatialUnits where p.SuId == uid select p).FirstOrDefault();
                 if (parcel == null)
                 {
-                    parcel = new Parcel() { SuId = uid.ToString() };
+                    parcel = new Parcel() { SuId = uid.ToString(), Area = 100500, Status = SpatialUnit.SpatialUnitStatus.Normal, Version = 1, BeginLifeSpanVersion = DateTime.Now };
                     context.SpatialUnits.Add(parcel);
                 }
                 context.SaveChanges();
@@ -307,7 +307,10 @@ namespace Specifications
             var result = transaction.Properties.Where(laUnit => laUnit.Uid == uid).FirstOrDefault();
             if (result == null)
             {
-                result = new LAUnit() { SpatialUnits = new List<SpatialUnit>() };
+                //it have to alter existing versions if any
+                //var ex = from la in context.LAUnits where la.uid=uid && la.Beginlifespanversion!=null && la.endlifespanversion==null
+                //ex.tolist().foreach(la=>la.EndLifespanVersion = DateTime.now)
+                result = new LAUnit() {Uid=uid, SpatialUnits = new List<SpatialUnit>(), BeginLifeSpanVersion=DateTime.Now,Version=-1 };
                 transaction.Properties.Add(result);
             }
 

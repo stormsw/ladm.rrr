@@ -82,8 +82,10 @@ namespace Ladm
             /// select rrr join rrr.lauintid la join la.spatialunits su where su.suid in(...)
 
             var filter = transaction.Properties.SelectMany(la => la.SpatialUnits).ToList().ConvertAll<string>(item => item.SuId);
-
+            
             List<RRR> affected = new List<RRR>();
+            var ttt = Type.GetType(transaction.TransactionType.RightType);
+
             var allActiveRRR = context.RRRs.Where(activeRRR => activeRRR.BeginLifeSpanVersion != null
                                              && activeRRR.EndLifeSpanVersion == null
                 //assume work with own rrr type
@@ -98,11 +100,12 @@ namespace Ladm
                                             // if need su=RRR we may go    
                                             //suid2RRR[su.SuId] = dynoR2S.Right
                                                ));
-
+            
             foreach (var oldRRR in affected)
             {
                 var newRRR = (RRR)Activator.CreateInstance(oldRRR.GetType());
                 newRRR.LAUnit = oldRRR.LAUnit;
+                oldRRR.LAUnit.EndLifeSpanVersion = 
                 oldRRR.EndLifeSpanVersion = newRRR.BeginLifeSpanVersion = DateTime.Now;
                 newRRR.Version = oldRRR.Version + 1;
 
@@ -148,6 +151,7 @@ namespace Ladm
             foreach (var party in targetParties)
             {
                 var laUnits = transaction.GetPartyTargetLaUnit(party);
+
                 if (laUnits.Count() == 0)
                     throw new ArgumentException("Can't proceed registration transaction w/o target properties assigned to target party.");
                 /// we have to process new SU there and update them
@@ -155,8 +159,9 @@ namespace Ladm
                 {
                     laUnit.SpatialUnits.ToList().Where(su => su.Status == SpatialUnit.SpatialUnitStatus.New).ToList().
                         ForEach(newSU => newSU.BeginLifeSpanVersion = DateTime.Now);
+                    laUnit.BeginLifeSpanVersion = DateTime.Now;
 
-                    var rrr = (RRR)Activator.CreateInstance(rrrType);                    
+                    var rrr = (RRR)Activator.CreateInstance(rrrType);
                     rrr.Origin = rrr.CreatedBy = transaction;
                     rrr.BeginLifeSpanVersion = DateTime.Now;
                     rrr.Party = party;
@@ -170,6 +175,12 @@ namespace Ladm
                     //BuissnessLogicProvider.RegisterRRRHandler(transaction,rrr)
                     context.RRRs.Add(rrr);
                 }
+            }
+
+            var sourcelaUnits = transaction.GetTransactionSourceLAUnits();
+            if (sourcelaUnits != null)
+            {
+                sourcelaUnits.ToList().ForEach(la => la.EndLifeSpanVersion = DateTime.Now);
             }
 
             context.SaveChanges();
