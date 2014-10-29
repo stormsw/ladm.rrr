@@ -84,8 +84,7 @@ namespace Ladm
             var filter = transaction.Properties.SelectMany(la => la.SpatialUnits).ToList().ConvertAll<string>(item => item.SuId);
             
             List<RRR> affected = new List<RRR>();
-            var ttt = Type.GetType(transaction.TransactionType.RightType);
-
+            
             var allActiveRRR = context.RRRs.Where(activeRRR => activeRRR.BeginLifeSpanVersion != null
                                              && activeRRR.EndLifeSpanVersion == null
                 //assume work with own rrr type
@@ -105,6 +104,8 @@ namespace Ladm
             {
                 var newRRR = (RRR)Activator.CreateInstance(oldRRR.GetType());
                 newRRR.LAUnit = oldRRR.LAUnit;
+                /// LAUnit exists only as a prototype (in the transaction) or in an active RRR, 
+                /// so it's own lifespan is tied to the RRR lifespan (1=1)
                 oldRRR.LAUnit.EndLifeSpanVersion = 
                 oldRRR.EndLifeSpanVersion = newRRR.BeginLifeSpanVersion = DateTime.Now;
                 newRRR.Version = oldRRR.Version + 1;

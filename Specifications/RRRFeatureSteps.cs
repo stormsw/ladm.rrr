@@ -59,7 +59,13 @@ namespace Specifications
                 }
                 launit.Uid = uid;
 
-                var targetlist = (transaction.TargetPropertiesIds ?? string.Empty).Split(',').ToList();
+
+                var targetlist = new List<string>();
+                if (!string.IsNullOrEmpty(transaction.TargetPropertiesIds))
+                {
+                    targetlist = transaction.TargetPropertiesIds.Split(',').ToList();
+                }
+
                 if (!targetlist.Contains(uid))
                 {
                     targetlist.Add(uid);
@@ -82,7 +88,12 @@ namespace Specifications
 
                 launit.Uid = uid;
 
-                var sourcelist = (transaction.SourcePropertiesIds ?? string.Empty).Split(',').ToList();
+                var sourcelist = new List<string>();
+                if (!string.IsNullOrEmpty(transaction.SourcePropertiesIds))
+                {
+                    sourcelist = transaction.SourcePropertiesIds.Split(',').ToList();
+                }
+
                 if (!sourcelist.Contains(uid))
                 {
                     sourcelist.Add(uid);

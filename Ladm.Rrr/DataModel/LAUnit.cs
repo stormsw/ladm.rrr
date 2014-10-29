@@ -25,11 +25,11 @@ namespace Ladm.DataModel
 
         #region Versionable attribs
         /// <summary>
-        /// Version start date
+        /// Version start date (Set with RRR in transaction complete handler)
         /// </summary>        
         public DateTime? BeginLifeSpanVersion { get; set; }
         /// <summary>
-        /// Version end date
+        /// Version end date (Set with cancellation of RRR in  complete handler)
         /// </summary>
         public DateTime? EndLifeSpanVersion { get; set; }
         /// <summary>
