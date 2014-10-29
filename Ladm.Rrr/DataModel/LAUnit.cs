@@ -38,4 +38,5 @@ namespace Ladm.DataModel
         public int Version { get; set; }
         #endregion
     }
+
 }

@@ -134,7 +134,11 @@ namespace Specifications
                     {
                         property = new Parcel() { Area = 1, SuId = suid,Status = SpatialUnit.SpatialUnitStatus.New };
                         context.SpatialUnits.Add(property);
+                    } else
+                    {
+                        /// at this moment we didn't 
                     }
+
 
                     if (launit.SpatialUnits == null)
                     {

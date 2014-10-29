@@ -21,6 +21,10 @@ namespace Ladm.DataModel
         /// To keep subsets
         /// </summary>
         public virtual ICollection<SpatialUnit> Members { get; set; }
+        /// <summary>
+        /// Back ref to LAUnits
+        /// </summary>
+        public virtual ICollection<LAUnit> LAUnitsAttending { get; set; }
         #region Versionable attribs
         /// <summary>
         /// Version start date
@@ -38,6 +42,8 @@ namespace Ladm.DataModel
         protected SpatialUnit()
         {
             Status = SpatialUnitStatus.New;
+            Members = new HashSet<SpatialUnit>();
+            LAUnitsAttending = new HashSet<LAUnit>();
         }
     }
 

@@ -94,7 +94,11 @@ namespace Ladm
             //Dictionary<string, RRR> suid2RRR = new Dictionary<string, RRR>();
             allActiveRRR.Select(activeR=>new {Right = activeR, SpatialUnits = activeR.LAUnit.SpatialUnits}).ToList().
                 ForEach(dynoR2S=>                
-                                (dynoR2S.SpatialUnits??Enumerable.Empty<SpatialUnit>()).Where(c => filter.Contains(c.SuId)).ToList()
+                                (dynoR2S.SpatialUnits
+                                        /// LADM supposed RRR may have empty SU ref
+                                        /// but this case suposed it always applied!
+                                        /// ??Enumerable.Empty<SpatialUnit>()
+                                                    ).Where(c => filter.Contains(c.SuId)).ToList()
                                         .ForEach(su=>affected.Add(dynoR2S.Right)
                                             // if need su=RRR we may go    
                                             //suid2RRR[su.SuId] = dynoR2S.Right

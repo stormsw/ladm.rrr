@@ -24,5 +24,15 @@ namespace Ladm.DataModel
             //Database.SetInitializer<LadmDbContext>(new DropCreateDatabaseIfModelChanges<LadmDbContext>());
             //Database.SetInitializer<LadmDbContext>(new DropCreateDatabaseAlways<LadmDbContext>());           
         }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<LAUnit>().HasMany(la => la.SpatialUnits).WithMany(s => s.LAUnitsAttending).Map(m =>
+                {
+                    m.MapLeftKey("LAUnitId");
+                    m.MapRightKey("SpatialUnitId");
+                    m.ToTable("lr_launit_spatialunits");
+                });
+        }
     }
 }
