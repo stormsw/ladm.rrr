@@ -59,6 +59,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Merge.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Merge.feature</DependentUpon>
+    </Compile>
     <Compile Include="SharedContext.cs" />
     <Compile Include="RRRFeatureSteps.cs" />
     <Compile Include="DataProvider\Initializer.cs" />
@@ -78,6 +83,10 @@
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Merge.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Merge.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
     <None Include="RRRFeature.feature">

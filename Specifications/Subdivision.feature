@@ -1,7 +1,9 @@
 ﻿Feature: Subdivision
-	In order to avoid silly mistakes
-	As a math idiot
-	I want to be told the sum of two numbers
+		It happened when single or some set of source properties produces new set
+		It may vary in results depends on lifespan of origin 
+		whethere it (o)=>{o`,n} or (o)=>{n1,n2} or {o1,o2} => {o1`,o2`,n...}
+		But main idea - cancel all RRR on source and produce new for targets
+		We may work on LAUnits for different right types at the same operation
 
 Background: 
 	Given We have Parcel with Uid = "Property 2"
@@ -16,8 +18,10 @@ Background:
 	#And Transaction No"TRN-002" target parties reference property with Uid = "Property 2"
 	When transaction "TRN-002" is completed
 
-@mytag
+@subdivision
 Scenario: Subdivision produces 2 new properties and no additional interests registered on source
+		  Source property is archived as a result
+
 	Given Registration transaction "SUBS" with No."TRN-003" is set current
 	And Transaction No"TRN-003" has source LAUnit "Occupancy-LA-02"
 	And Transaction No"TRN-003" has target LAUnit "Occupancy-LA-03"

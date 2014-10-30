@@ -34,8 +34,11 @@ namespace Specifications
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Subdivision", "In order to avoid silly mistakes\r\nAs a math idiot\r\nI want to be told the sum of t" +
-                    "wo numbers", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Subdivision", @"It happened when single or some set of source properties produces new set
+It may vary in results depends on lifespan of origin 
+whethere it (o)=>{o`,n} or (o)=>{n1,n2} or {o1,o2} => {o1`,o2`,n...}
+But main idea - cancel all RRR on source and produce new for targets
+We may work on LAUnits for different right types at the same operation", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -66,23 +69,23 @@ namespace Specifications
         
         public virtual void FeatureBackground()
         {
-#line 6
-#line 7
- testRunner.Given("We have Parcel with Uid = \"Property 2\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 8
 #line 9
- testRunner.And("Registration transaction \"REGO\" with No.\"TRN-002\" is set current", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.Given("We have Parcel with Uid = \"Property 2\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 11
+ testRunner.And("Registration transaction \"REGO\" with No.\"TRN-002\" is set current", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 13
  testRunner.And("Transaction No\"TRN-002\" has target LAUnit \"Occupancy-LA-02\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 12
+#line 14
  testRunner.And("Transaction No\"TRN-002\" has property with Uid = \"Property 2\" in LAUnit \"Occupancy" +
                     "-LA-02\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 13
+#line 15
  testRunner.And("Transaction No\"TRN-002\" has party \"Tim Taler\" with role \"Grantee\" associated with" +
                     " LAUnit \"Occupancy-LA-02\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 14
+#line 16
  testRunner.And("Transaction No\"TRN-002\" has party \"Sara Taler\" with role \"Grantee\" associated wit" +
                     "h LAUnit \"Occupancy-LA-02\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 17
+#line 19
  testRunner.When("transaction \"TRN-002\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
         }
@@ -104,45 +107,45 @@ namespace Specifications
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Subdivision produces 2 new properties and no additional interests registered on s" +
                     "ource", new string[] {
-                        "mytag"});
-#line 20
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 21
- testRunner.Given("Registration transaction \"SUBS\" with No.\"TRN-003\" is set current", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+                        "subdivision"});
 #line 22
- testRunner.And("Transaction No\"TRN-003\" has source LAUnit \"Occupancy-LA-02\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 23
- testRunner.And("Transaction No\"TRN-003\" has target LAUnit \"Occupancy-LA-03\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 24
- testRunner.And("Transaction No\"TRN-003\" has target LAUnit \"Occupancy-LA-04\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+this.ScenarioSetup(scenarioInfo);
+#line 8
+this.FeatureBackground();
 #line 25
+ testRunner.Given("Registration transaction \"SUBS\" with No.\"TRN-003\" is set current", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 26
+ testRunner.And("Transaction No\"TRN-003\" has source LAUnit \"Occupancy-LA-02\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 27
+ testRunner.And("Transaction No\"TRN-003\" has target LAUnit \"Occupancy-LA-03\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 28
+ testRunner.And("Transaction No\"TRN-003\" has target LAUnit \"Occupancy-LA-04\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 29
  testRunner.And("Transaction No\"TRN-003\" has property with Uid = \"Property 2\" in LAUnit \"Occupancy" +
                     "-LA-02\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 26
+#line 30
  testRunner.And("Property \"Property 2\" in Transaction No\"TRN-003\" Status set \"Archived\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 27
+#line 31
  testRunner.And("Transaction No\"TRN-003\" has property with Uid = \"Property 3\" in LAUnit \"Occupancy" +
                     "-LA-03\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 28
+#line 32
  testRunner.And("Transaction No\"TRN-003\" has property with Uid = \"Property 4\" in LAUnit \"Occupancy" +
                     "-LA-04\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 29
+#line 33
  testRunner.And("Transaction No\"TRN-003\" has party \"Tim Taler\" with role \"Grantee\" associated with" +
                     " LAUnit \"Occupancy-LA-03\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 30
+#line 34
  testRunner.And("Transaction No\"TRN-003\" has party \"Sara Taler\" with role \"Grantee\" associated wit" +
                     "h LAUnit \"Occupancy-LA-04\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 31
- testRunner.When("transaction \"TRN-003\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 32
- testRunner.Then("Cancelled by \"TRN-003\" 2 \"Occupancy\" rights", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 33
- testRunner.And("Party \"Tim Taler\" have active \"Occupancy\" rights on \"Property 3\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 34
- testRunner.And("Party \"Sara Taler\" have active \"Occupancy\" rights on \"Property 4\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 35
+ testRunner.When("transaction \"TRN-003\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 36
+ testRunner.Then("Cancelled by \"TRN-003\" 2 \"Occupancy\" rights", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 37
+ testRunner.And("Party \"Tim Taler\" have active \"Occupancy\" rights on \"Property 3\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 38
+ testRunner.And("Party \"Sara Taler\" have active \"Occupancy\" rights on \"Property 4\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 39
  testRunner.And("Property \"Property 2\" is archived", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
