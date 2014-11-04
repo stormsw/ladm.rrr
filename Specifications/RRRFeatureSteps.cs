@@ -18,7 +18,10 @@ namespace Specifications
         {
             using (var context = new LadmDbContext())
             {
-                var transaction = sharedContext.CurrentTransaction; //(from t in context.Transactions where t.TransactionNumber == transactionNumber select t).FirstOrDefault();
+                Assert.NotNull(sharedContext.CurrentTransaction);
+                var transactionNumber = sharedContext.CurrentTransaction.TransactionNumber;
+                /// TODO: refactor, cause track changes notifier dont allows >1 references and EF wont track transaction from cached container
+                var transaction = (from t in context.Transactions where t.TransactionNumber == transactionNumber select t).FirstOrDefault();
                 Assert.NotNull(transaction);
                 var party = getOrCreateTransactionParty(transaction, fullName);
                 party.Role = partyRole;
@@ -57,12 +60,16 @@ namespace Specifications
             }
         }
 
-        [Given(@"Current transaction has target LAUnit ""(.*)""")]
-        public void GivenCurrentTransactionHasTargetLAUnit(string uid)
+        [Given(@"Current transaction has source LAUnit ""(.*)""")]
+        public void GivenCurrentTransactionHasSourceLAUnit(string uid)
         {
             using (var context = new LadmDbContext())
             {
-                var transaction = sharedContext.CurrentTransaction;//(from t in context.Transactions where t.TransactionNumber == transactionNumber select t).FirstOrDefault();
+                Assert.NotNull(sharedContext.CurrentTransaction);
+                var transactionNumber = sharedContext.CurrentTransaction.TransactionNumber;
+                /// TODO: refactor, cause track changes notifier dont allows >1 references and EF wont track transaction from cached container
+                var transaction = (from t in context.Transactions where t.TransactionNumber == transactionNumber select t).FirstOrDefault();
+                
                 Assert.NotNull(transaction);
 
                 var launit = transaction.Properties.Where(la => la.Uid == uid).FirstOrDefault();
@@ -72,6 +79,48 @@ namespace Specifications
                     transaction.Properties.Add(launit);
                     context.LAUnit.Add(launit);
                 }
+                launit.Uid = uid;
+                var sourceList = new List<string>();
+                if (!string.IsNullOrEmpty(transaction.SourcePropertiesIds))
+                {
+                    sourceList = transaction.SourcePropertiesIds.Split(',').ToList();
+                }
+
+                if (!sourceList.Contains(uid))
+                {
+                    sourceList.Add(uid);
+                    transaction.SourcePropertiesIds = string.Join(",", sourceList);
+                }
+
+                context.SaveChanges();
+            }
+        }
+
+        [Given(@"Current transaction has target LAUnit ""(.*)""")]
+        public void GivenCurrentTransactionHasTargetLAUnit(string uid)
+        {
+            using (var context = new LadmDbContext())
+            {
+                Assert.NotNull(sharedContext.CurrentTransaction);
+                var transactionNumber = sharedContext.CurrentTransaction.TransactionNumber;
+                /// TODO: refactor, cause track changes notifier dont allows >1 references and EF wont track transaction from cached container
+                var transaction = (from t in context.Transactions where t.TransactionNumber == transactionNumber select t).FirstOrDefault();
+                
+                Assert.NotNull(transaction);
+
+                if (transaction.Properties == null)
+                {
+                    transaction.Properties = new List<LAUnit>();
+                }
+
+                var launit = transaction.Properties.Where(la => la.Uid == uid).FirstOrDefault();
+                if (launit == null)
+                {
+                    launit = new LAUnit() { SpatialUnits = new List<SpatialUnit>() };
+                    transaction.Properties.Add(launit);
+                    context.LAUnit.Add(launit);
+                }
+
                 launit.Uid = uid;
                 var targetlist = new List<string>();
                 if (!string.IsNullOrEmpty(transaction.TargetPropertiesIds))
@@ -156,7 +205,10 @@ namespace Specifications
         {
             using (var context = new LadmDbContext())
             {
-                var transaction = sharedContext.CurrentTransaction;//(from t in context.Transactions where t.TransactionNumber == transactionNumber select t).FirstOrDefault();
+                Assert.NotNull(sharedContext.CurrentTransaction);
+                var transactionNumber = sharedContext.CurrentTransaction.TransactionNumber;
+                /// TODO: refactor, cause track changes notifier dont allows >1 references and EF wont track transaction from cached container
+                var transaction = (from t in context.Transactions where t.TransactionNumber == transactionNumber select t).FirstOrDefault();
                 Assert.NotNull(transaction);
                 var launit = getOrCreateTransactionLaUnit(transaction, la_uid);
                 launit.Uid = la_uid;
@@ -296,10 +348,11 @@ namespace Specifications
             using (var context = new LadmDbContext())
             {
                 var transaction = NewTransaction(transactionCode, transactionNumber, context);
-                sharedContext.TransactionsHash.Add(new KeyValuePair<string,Transaction>(transactionNumber,transaction));
-                sharedContext.CurrentTransaction = transaction;
+                sharedContext.TransactionsHash.Add(new KeyValuePair<string,Transaction>(transactionNumber,transaction));                
                 context.Transactions.Add(transaction);
                 context.SaveChanges();
+                /// make sure it will not repsond to trackchangesnotifier
+                sharedContext.CurrentTransaction = transaction;
             }
         }
 
@@ -396,12 +449,22 @@ namespace Specifications
             }
         }
 
-        [Then(@"Property ""(.*)"" is archived")]
-        public void ThenPropertyIsArchived(string p0)
+        [Then(@"Property ""(.*)"" is not archived")]
+        public void ThenPropertyIsNotArchived(string suid)
         {
             using (var context = new LadmDbContext())
             {
-                var property = (from su in context.SpatialUnits where su.SuId == p0 && su.Status == SpatialUnit.SpatialUnitStatus.Archived select su).Single();
+                var property = (from su in context.SpatialUnits where su.SuId == suid && su.Status == SpatialUnit.SpatialUnitStatus.Normal select su).Single();
+                Assert.NotNull(property);
+            }
+        }
+
+        [Then(@"Property ""(.*)"" is archived")]
+        public void ThenPropertyIsArchived(string suid)
+        {
+            using (var context = new LadmDbContext())
+            {
+                var property = (from su in context.SpatialUnits where su.SuId == suid && su.Status == SpatialUnit.SpatialUnitStatus.Archived select su).Single();
                 Assert.NotNull(property);
             }
         }
@@ -416,6 +479,10 @@ namespace Specifications
         /// <returns></returns>
         private static Party getOrCreateTransactionParty(Transaction transaction, string fullName)
         {
+            if(transaction.Parties==null)
+            {
+                transaction.Parties = new List<Party>();
+            }
             var result = transaction.Parties.Where(party => party.FullName == fullName).FirstOrDefault();
 
             if (result == null)
