@@ -13,6 +13,21 @@ namespace Specifications
     {
         private static SharedContext sharedContext = SharedContext.GetInstance();
 
+        [Given(@"Current transaction has party ""(.*)"" with role ""(.*)"" associated with LAUnit ""(.*)""")]
+        public void GivenCurrentTransactionHasPartyWithRoleAssociatedWithLAUnit(string fullName, string partyRole, string uid)
+        {
+            using (var context = new LadmDbContext())
+            {
+                var transaction = sharedContext.CurrentTransaction; //(from t in context.Transactions where t.TransactionNumber == transactionNumber select t).FirstOrDefault();
+                Assert.NotNull(transaction);
+                var party = getOrCreateTransactionParty(transaction, fullName);
+                party.Role = partyRole;
+                /// we may check wheter such LAUnit exists, but this will not define parties before properties in test
+                party.TargetUIDs = uid;
+                context.SaveChanges();
+            }
+        }
+
         [Given(@"Transaction No""(.*)"" has party ""(.*)"" with role ""(.*)"" associated with LAUnit ""(.*)""")]
         public void GivenTransactionNo_HasPartyWithRole(string transactionNumber, string fullName, string partyRole, string uid)
         {
@@ -38,6 +53,38 @@ namespace Specifications
                 var lau = transaction.Properties.Where(la => la.SpatialUnits.ToList().Exists(su => su.SuId == uid)).FirstOrDefault();
                 Assert.NotNull(lau);
                 transaction.Parties.ToList().ForEach(p => p.TargetUIDs = lau.Uid);
+                context.SaveChanges();
+            }
+        }
+
+        [Given(@"Current transaction has target LAUnit ""(.*)""")]
+        public void GivenCurrentTransactionHasTargetLAUnit(string uid)
+        {
+            using (var context = new LadmDbContext())
+            {
+                var transaction = sharedContext.CurrentTransaction;//(from t in context.Transactions where t.TransactionNumber == transactionNumber select t).FirstOrDefault();
+                Assert.NotNull(transaction);
+
+                var launit = transaction.Properties.Where(la => la.Uid == uid).FirstOrDefault();
+                if (launit == null)
+                {
+                    launit = new LAUnit() { SpatialUnits = new List<SpatialUnit>() };
+                    transaction.Properties.Add(launit);
+                    context.LAUnit.Add(launit);
+                }
+                launit.Uid = uid;
+                var targetlist = new List<string>();
+                if (!string.IsNullOrEmpty(transaction.TargetPropertiesIds))
+                {
+                    targetlist = transaction.TargetPropertiesIds.Split(',').ToList();
+                }
+
+                if (!targetlist.Contains(uid))
+                {
+                    targetlist.Add(uid);
+                    transaction.TargetPropertiesIds = string.Join(",", targetlist);
+                }
+
                 context.SaveChanges();
             }
         }
@@ -98,6 +145,55 @@ namespace Specifications
                 {
                     sourcelist.Add(uid);
                     transaction.SourcePropertiesIds = string.Join(",", sourcelist);
+                }
+
+                context.SaveChanges();
+            }
+        }
+
+        [Given(@"Current transaction has property with Uid = ""(.*)"" in LAUnit ""(.*)""")]
+        public void GivenCurrentTransactionHasPropertyWithUidInLAUnit(string suid, string la_uid)
+        {
+            using (var context = new LadmDbContext())
+            {
+                var transaction = sharedContext.CurrentTransaction;//(from t in context.Transactions where t.TransactionNumber == transactionNumber select t).FirstOrDefault();
+                Assert.NotNull(transaction);
+                var launit = getOrCreateTransactionLaUnit(transaction, la_uid);
+                launit.Uid = la_uid;
+                /// whether it already added
+                /// we check need only against this particular LAUnit
+                if (launit.SpatialUnits == null)
+                {
+                    launit.SpatialUnits = new List<SpatialUnit>();
+                }
+                var property = launit.SpatialUnits.Where(su => su.SuId == suid).FirstOrDefault();
+                if (property == null)
+                {
+                    /// wether exists in db
+                    /// get latest from db
+                    property = (from p in context.SpatialUnits
+                                where p.SuId == suid
+                                    && p.BeginLifeSpanVersion != null
+                                    && p.EndLifeSpanVersion == null
+                                select p).FirstOrDefault();
+                    /// otherwise create new
+                    if (property == null)
+                    {
+                        property = new Parcel() { Area = 1, SuId = suid, Status = SpatialUnit.SpatialUnitStatus.New };
+                        context.SpatialUnits.Add(property);
+                    }
+                    else
+                    {
+                        /// at this moment we didn't 
+                    }
+
+
+                    if (launit.SpatialUnits == null)
+                    {
+                        launit.SpatialUnits = new List<SpatialUnit>();
+                    }
+
+                    launit.SpatialUnits.Add(property);
                 }
 
                 context.SaveChanges();

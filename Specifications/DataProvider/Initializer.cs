@@ -105,8 +105,16 @@ namespace Specifications.DataProvider
                         Code = "SUBS",
                         Label = "Subdivision (Simple) - New properties only",
                         TargetPartyRole = "Grantee"
-                    }
+                    },
                 
+                    new TransactionMetaData(){
+                        RightType = "Occupancy",
+                        Action = TransactionMetaData.ActionCode.Alter,
+                        Meta = TransactionMetaData.MetaCode.Registration,
+                        Code = "MERG",
+                        Label = "Merge (Simple) - New single property as a result",
+                        TargetPartyRole = "Grantee"
+                    }
                 };
 
                 context.TransactionMetaData.AddRange(tmd);

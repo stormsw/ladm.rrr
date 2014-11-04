@@ -1,1 +1,1 @@
-﻿#error Parsing error near '//generat'
+﻿#error Parsing error near 'And	Registration transaction "REGO" with No."TRN-OCCUPANCY-4-MERGE-002" is set current'
