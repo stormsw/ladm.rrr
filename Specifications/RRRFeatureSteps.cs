@@ -355,7 +355,7 @@ namespace Specifications
                 }
                 catch (ArgumentException ex)
                 {
-                    //it exists
+                    //it exists (may happen when started debug session with set of test, background will be executed 2x)
                 }
 
                 context.Transactions.Add(transaction);

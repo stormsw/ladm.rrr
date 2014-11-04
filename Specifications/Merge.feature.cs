@@ -70,32 +70,58 @@ The Merge operation may have as a result an origin property elimenated.", Progra
         public virtual void FeatureBackground()
         {
 #line 8
-#line 10
+#line 12
  testRunner.Given("Registration transaction \"REGO\" with No.\"TRN-PRE-OCCUPANCY-4-MERGE-01\" is set cur" +
                     "rent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 12
- testRunner.And("Current transaction has target LAUnit \"LA-Occupancy-4-Merge-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 14
+ testRunner.And("Current transaction has target LAUnit \"LA-Occupancy-4-Merge-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 16
  testRunner.And("Current transaction has property with Uid = \"Property 4 (Merge 01)\" in LAUnit \"LA" +
                     "-Occupancy-4-Merge-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 16
+#line 18
  testRunner.And("Current transaction has party \"Tim Taler\" with role \"Grantee\" associated with LAU" +
                     "nit \"LA-Occupancy-4-Merge-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 18
+#line 20
  testRunner.Given("Registration transaction \"REGO\" with No.\"TRN-PRE-OCCUPANCY-4-MERGE-02\" is set cur" +
                     "rent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 19
+#line 21
  testRunner.And("Current transaction has target LAUnit \"LA-Occupancy-4-Merge-02\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 20
+#line 22
  testRunner.And("Current transaction has property with Uid = \"Property 4 (Merge 02)\" in LAUnit \"LA" +
                     "-Occupancy-4-Merge-02\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 21
+#line 23
  testRunner.And("Current transaction has party \"Steve Adams\" with role \"Grantee\" associated with L" +
                     "AUnit \"LA-Occupancy-4-Merge-02\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 22
+#line 24
  testRunner.When("transaction \"TRN-PRE-OCCUPANCY-4-MERGE-01\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 23
+#line 25
  testRunner.And("transaction \"TRN-PRE-OCCUPANCY-4-MERGE-02\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 28
+ testRunner.Given("Registration transaction \"REGO\" with No.\"TRN-PRE-OCCUPANCY-4-MERGE-03\" is set cur" +
+                    "rent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 29
+ testRunner.And("Current transaction has target LAUnit \"LA-Occupancy-4-Merge-03\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 30
+ testRunner.And("Current transaction has property with Uid = \"Property 7 (A-Merge 01)\" in LAUnit \"" +
+                    "LA-Occupancy-4-Merge-03\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 31
+ testRunner.And("Current transaction has party \"Robert Taler\" with role \"Grantee\" associated with " +
+                    "LAUnit \"LA-Occupancy-4-Merge-03\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 33
+ testRunner.Given("Registration transaction \"REGO\" with No.\"TRN-PRE-OCCUPANCY-4-MERGE-04\" is set cur" +
+                    "rent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 34
+ testRunner.And("Current transaction has target LAUnit \"LA-Occupancy-4-Merge-04\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 35
+ testRunner.And("Current transaction has property with Uid = \"Property 7 (A-Merge 02)\" in LAUnit \"" +
+                    "LA-Occupancy-4-Merge-04\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 36
+ testRunner.And("Current transaction has party \"John Adams\" with role \"Grantee\" associated with LA" +
+                    "Unit \"LA-Occupancy-4-Merge-04\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 37
+ testRunner.When("transaction \"TRN-PRE-OCCUPANCY-4-MERGE-03\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 38
+ testRunner.And("transaction \"TRN-PRE-OCCUPANCY-4-MERGE-04\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
         }
         
@@ -115,44 +141,44 @@ The Merge operation may have as a result an origin property elimenated.", Progra
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Simple merge of 2 properties", new string[] {
                         "merger"});
-#line 25
+#line 41
 this.ScenarioSetup(scenarioInfo);
 #line 8
 this.FeatureBackground();
-#line 30
+#line 46
  testRunner.Given("Registration transaction \"MERG\" with No.\"TRN-MERGE-001\" is set current", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 32
+#line 48
  testRunner.And("Current transaction has target LAUnit \"Simple Merge-LA-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 34
+#line 50
  testRunner.And("Current transaction has property with Uid = \"Property 5 Merge Result\" in LAUnit \"" +
                     "Simple Merge-LA-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 36
+#line 52
  testRunner.And("Current transaction has party \"Mark Twen (merger)\" with role \"Grantee\" associated" +
                     " with LAUnit \"Simple Merge-LA-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 39
+#line 55
  testRunner.And("Current transaction has source LAUnit \"Source 4 Simple Merge-LA-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 41
+#line 57
  testRunner.And("Current transaction has property with Uid = \"Property 4 (Merge 01)\" in LAUnit \"Si" +
                     "mple Merge-LA-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 42
+#line 58
  testRunner.And("Current transaction has property with Uid = \"Property 4 (Merge 02)\" in LAUnit \"Si" +
                     "mple Merge-LA-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 44
+#line 60
  testRunner.And("Property \"Property 4 (Merge 01)\" in Transaction No\"TRN-MERGE-001\" Status set \"Arc" +
                     "hived\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 45
+#line 61
  testRunner.And("Property \"Property 4 (Merge 02)\" in Transaction No\"TRN-MERGE-001\" Status set \"Arc" +
                     "hived\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 47
+#line 63
  testRunner.When("transaction \"TRN-MERGE-001\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 48
+#line 64
  testRunner.Then("Cancelled by \"TRN-MERGE-001\" 2 \"Occupancy\" rights", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 49
+#line 65
  testRunner.And("Party \"Mark Twen (merger)\" have active \"Occupancy\" rights on \"Property 5 Merge Re" +
                     "sult\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 50
+#line 66
  testRunner.And("Property \"Property 4 (Merge 01)\" is archived", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 51
+#line 67
  testRunner.And("Property \"Property 4 (Merge 02)\" is archived", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -164,67 +190,41 @@ this.FeatureBackground();
         public virtual void AmalgamationMergeOf2Properties()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Amalgamation merge of 2 properties", ((string[])(null)));
-#line 53
+#line 69
 this.ScenarioSetup(scenarioInfo);
 #line 8
 this.FeatureBackground();
-#line 61
- testRunner.Given("Registration transaction \"REGO\" with No.\"TRN-PRE-OCCUPANCY-4-MERGE-03\" is set cur" +
-                    "rent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 62
- testRunner.And("Current transaction has target LAUnit \"LA-Occupancy-4-Merge-03\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 63
- testRunner.And("Current transaction has property with Uid = \"Property 7 (A-Merge 01)\" in LAUnit \"" +
-                    "LA-Occupancy-4-Merge-03\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 64
- testRunner.And("Current transaction has party \"Robert Taler\" with role \"Grantee\" associated with " +
-                    "LAUnit \"LA-Occupancy-4-Merge-03\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 66
- testRunner.Given("Registration transaction \"REGO\" with No.\"TRN-PRE-OCCUPANCY-4-MERGE-04\" is set cur" +
-                    "rent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 67
- testRunner.And("Current transaction has target LAUnit \"LA-Occupancy-4-Merge-04\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 68
- testRunner.And("Current transaction has property with Uid = \"Property 7 (A-Merge 02)\" in LAUnit \"" +
-                    "LA-Occupancy-4-Merge-04\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 69
- testRunner.And("Current transaction has party \"John Adams\" with role \"Grantee\" associated with LA" +
-                    "Unit \"LA-Occupancy-4-Merge-04\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 70
- testRunner.When("transaction \"TRN-PRE-OCCUPANCY-4-MERGE-03\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 71
- testRunner.And("transaction \"TRN-PRE-OCCUPANCY-4-MERGE-04\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 74
- testRunner.Given("Registration transaction \"MERG\" with No.\"TRN-A-MERGE-002\" is set current", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 75
+ testRunner.Given("Registration transaction \"MERG\" with No.\"TRN-A-MERGE-002\" is set current", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 76
  testRunner.And("Current transaction has target LAUnit \"LA-Occupancy-4-AmalgaMerge-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 77
+#line 78
  testRunner.And("Current transaction has property with Uid = \"Property 7 (A-Merge 01)\" in LAUnit \"" +
                     "LA-Occupancy-4-AmalgaMerge-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 78
+#line 79
  testRunner.And("Current transaction has party \"Matt Tomson (merger)\" with role \"Grantee\" associat" +
                     "ed with LAUnit \"LA-Occupancy-4-AmalgaMerge-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 80
- testRunner.And("Current transaction has source LAUnit \"LA-Src-4-AmalgaMerge-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 81
+ testRunner.And("Current transaction has source LAUnit \"LA-Src-4-AmalgaMerge-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 82
  testRunner.And("Current transaction has property with Uid = \"Property 7 (A-Merge 01)\" in LAUnit \"" +
                     "LA-Src-4-AmalgaMerge-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 82
+#line 83
  testRunner.And("Current transaction has property with Uid = \"Property 7 (A-Merge 02)\" in LAUnit \"" +
                     "LA-Src-4-AmalgaMerge-01\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 84
+#line 85
  testRunner.And("Property \"Property 7 (A-Merge 02)\" in Transaction No\"TRN-A-MERGE-002\" Status set " +
                     "\"Archived\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 85
- testRunner.When("transaction \"TRN-A-MERGE-002\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 86
- testRunner.Then("Cancelled by \"TRN-A-MERGE-002\" 2 \"Occupancy\" rights", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.When("transaction \"TRN-A-MERGE-002\" is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 87
+ testRunner.Then("Cancelled by \"TRN-A-MERGE-002\" 2 \"Occupancy\" rights", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 88
  testRunner.And("Party \"Matt Tomson (merger)\" have active \"Occupancy\" rights on \"Property 7 (A-Mer" +
                     "ge 01)\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 88
- testRunner.And("Property \"Property 7 (A-Merge 01)\" is not archived", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 89
+ testRunner.And("Property \"Property 7 (A-Merge 01)\" is not archived", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 90
  testRunner.And("Property \"Property 7 (A-Merge 02)\" is archived", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

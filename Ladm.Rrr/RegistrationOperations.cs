@@ -53,20 +53,23 @@ namespace Ladm
         /// <param name="context"></param>
         private static void completeRegistrationTransaction(Transaction transaction, LadmDbContext context)
         {
-            switch (transaction.TransactionType.Action)
+            if (transaction.Status == Transaction.TransactionStatus.Lodged)
             {
-                case TransactionMetaData.ActionCode.Create:
-                    completeCreateRegistration(transaction, context);
-                    break;
-                case TransactionMetaData.ActionCode.Alter:
-                    completeAlterRegistration(transaction, context);
-                    break;
-                case TransactionMetaData.ActionCode.Cancell:
-                    completeCancelRegistration(transaction, context);
-                    break;
-                default:
-                    throw new InvalidOperationException("Unknown action.");
-                //break;
+                switch (transaction.TransactionType.Action)
+                {
+                    case TransactionMetaData.ActionCode.Create:
+                        completeCreateRegistration(transaction, context);
+                        break;
+                    case TransactionMetaData.ActionCode.Alter:
+                        completeAlterRegistration(transaction, context);
+                        break;
+                    case TransactionMetaData.ActionCode.Cancell:
+                        completeCancelRegistration(transaction, context);
+                        break;
+                    default:
+                        throw new InvalidOperationException("Unknown action.");
+                    //break;
+                }
             }
         }
         /// <summary>
@@ -88,21 +91,24 @@ namespace Ladm
             var allActiveRRR = context.RRRs.Where(activeRRR => activeRRR.BeginLifeSpanVersion != null
                                              && activeRRR.EndLifeSpanVersion == null
                 //assume work with own rrr type
-                                             && activeRRR.TypeName == transaction.TransactionType.RightType                          
+                                             && activeRRR.TypeName == transaction.TransactionType.RightType
                                              );
             // if need su=RRR we may go    
             //Dictionary<string, RRR> suid2RRR = new Dictionary<string, RRR>();
-            allActiveRRR.Select(activeR=>new {Right = activeR, SpatialUnits = activeR.LAUnit.SpatialUnits}).ToList().
-                ForEach(dynoR2S=>                
+            allActiveRRR.Select(activeR=>new {Right = activeR, SpatialUnits = activeR.LAUnit.SpatialUnits})
+                .ToList()
+                .ForEach(dynoR2S=>                
                                 (dynoR2S.SpatialUnits
                                         /// LADM supposed RRR may have empty SU ref
                                         /// but this case suposed it always applied!
                                         /// ??Enumerable.Empty<SpatialUnit>()
-                                                    ).Where(c => filter.Contains(c.SuId)).ToList()
-                                        .ForEach(su=>affected.Add(dynoR2S.Right)
+                                                    )
+                                .Where(c => filter.Contains(c.SuId))
+                                .ToList()
+                                .ForEach(su=>affected.Add(dynoR2S.Right)
                                             // if need su=RRR we may go    
                                             //suid2RRR[su.SuId] = dynoR2S.Right
-                                               ));
+                ));
             
             foreach (var oldRRR in affected)
             {
