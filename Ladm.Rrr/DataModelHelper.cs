@@ -16,12 +16,13 @@ namespace Ladm
         /// <param name="rightType"></param>
         /// <param name="context">Instance of Db Context</param>
         /// <returns></returns>
-        public static IEnumerable<RRR> GetActiveSpatialUnitInterestsByRightType(string uid, string rightType, LadmDbContext context)
+        public static IQueryable<RRR> GetActiveSpatialUnitInterestsByRightType(string uid, string rightType, LadmDbContext context)
         {
             var rrrs = (
                 from r in context.RRRs
                 where r.BeginLifeSpanVersion != null
-                    && (r.EndDate <= DateTime.Now || r.EndDate == null)
+                //fix: right is valid if end date is not set or it in the future    
+                && (r.EndDate > DateTime.Now || r.EndDate == null)
                 && r.LAUnit.SpatialUnits.DefaultIfEmpty().Where(item => item.SuId == uid).Count() > 0
                 && r.TypeName == rightType
                 select r);

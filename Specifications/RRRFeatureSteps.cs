@@ -316,8 +316,9 @@ namespace Specifications
         {
             using (var context = new LadmDbContext())
             {
-                var result = Ladm.DataModelHelper.GetActiveSpatialUnitInterestsByRightType(uid, rightType, context).ToList().
-                    Where(r => r.Party.FullName == fullName).Count();
+                var result = Ladm.DataModelHelper.GetActiveSpatialUnitInterestsByRightType(uid, rightType, context)
+                    //.ToList()
+                    .Where(r => r.Party.FullName == fullName).Count();
                 Assert.True(result > 0);
             }
         }
@@ -348,7 +349,15 @@ namespace Specifications
             using (var context = new LadmDbContext())
             {
                 var transaction = NewTransaction(transactionCode, transactionNumber, context);
-                sharedContext.TransactionsHash.Add(new KeyValuePair<string,Transaction>(transactionNumber,transaction));                
+                try
+                {
+                    sharedContext.TransactionsHash.Add(new KeyValuePair<string, Transaction>(transactionNumber, transaction));
+                }
+                catch (ArgumentException ex)
+                {
+                    //it exists
+                }
+
                 context.Transactions.Add(transaction);
                 context.SaveChanges();
                 /// make sure it will not repsond to trackchangesnotifier

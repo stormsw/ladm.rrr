@@ -128,6 +128,16 @@ namespace Ladm
 
                 context.RRRs.Add(newRRR);
             }
+
+            var archivedSU = transaction.Properties.SelectMany(la => la.SpatialUnits).Where(su => su.Status == SpatialUnit.SpatialUnitStatus.Archived);
+
+            if (archivedSU != null)
+            {
+                foreach (var asu in archivedSU)
+                {
+                    asu.EndLifeSpanVersion = DateTime.Now;
+                }
+            }
         }
         /// <summary>
         /// Simplest way supposes to cancel old and create new
@@ -181,11 +191,18 @@ namespace Ladm
                     context.RRRs.Add(rrr);
                 }
             }
-
+            // versionaise prev LAUnits
             var sourcelaUnits = transaction.GetTransactionSourceLAUnits();
             if (sourcelaUnits != null)
             {
                 sourcelaUnits.ToList().ForEach(la => la.EndLifeSpanVersion = DateTime.Now);
+            }
+            // actualise new SU (Implementation is not complete, cause version source property have to be used and updated
+            var newSpatialUnits = transaction.Properties.SelectMany(la => la.SpatialUnits).Where(su => su.Status == SpatialUnit.SpatialUnitStatus.New);
+            foreach (var nsu in newSpatialUnits)
+            {
+                nsu.Status = SpatialUnit.SpatialUnitStatus.Normal;
+                nsu.BeginLifeSpanVersion = DateTime.Now;
             }
 
             context.SaveChanges();
