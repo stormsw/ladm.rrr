@@ -27,16 +27,18 @@ namespace Ladm.DataModel
         /// </summary>
         public virtual ICollection<Party> Parties { get; set; }
         /// <summary>
-        /// List of Grouping objects
+        /// List of Grouping objects (BusinessAuthorities - like RRR prototypes)
         /// </summary>
         public virtual ICollection<LAUnit> Properties { get; set; }
         /// <summary>
         /// Target LAUnit UIds (it's better to have attrib in LAUnit)
         /// </summary>
-        public string TargetPropertiesIds{ get; set; }
+        /// <remarks>They are target BusinessAuthorities. It's like a target RRR prototypes</remarks>
+        public string TargetPropertiesIds{ get; set; } //Target
         /// <summary>
         /// Source LAUnit UIds (it's better to have attrib in LAUnit)
         /// </summary>
+        /// <remarks>It better to have it SourceBusinessAuthorities (in a way as Source RRRs)</remarks>
         public string SourcePropertiesIds { get; set; }
 
         public DateTime? ExpirationDate { get; set; }

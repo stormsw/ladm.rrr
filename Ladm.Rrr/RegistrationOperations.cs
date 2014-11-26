@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Ladm
 {
-    public class RegistrationOperations
+    public sealed class RegistrationOperations
     {
         /// <summary>
         /// Transaction status set to withdrawed. If transaction is Registration type
@@ -80,35 +80,15 @@ namespace Ladm
         /// <param name="context"></param>
         private static void completeCancelRegistration(Transaction transaction, LadmDbContext context)
         {
+            /// filter out source SpatialUnits from trasaction
             var sourceSU = transaction.GetSourceProperties();
-            /// TODO: refactor
-            /// select rrr join rrr.lauintid la join la.spatialunits su where su.suid in(...)
 
             var filter = transaction.Properties.SelectMany(la => la.SpatialUnits).ToList().ConvertAll<string>(item => item.SuId);
             
-            List<RRR> affected = new List<RRR>();
             
-            var allActiveRRR = context.RRRs.Where(activeRRR => activeRRR.BeginLifeSpanVersion != null
-                                             && activeRRR.EndLifeSpanVersion == null
-                //assume work with own rrr type
-                                             && activeRRR.TypeName == transaction.TransactionType.RightType
-                                             );
-            // if need su=RRR we may go    
-            //Dictionary<string, RRR> suid2RRR = new Dictionary<string, RRR>();
-            allActiveRRR.Select(activeR=>new {Right = activeR, SpatialUnits = activeR.LAUnit.SpatialUnits})
-                .ToList()
-                .ForEach(dynoR2S=>                
-                                (dynoR2S.SpatialUnits
-                                        /// LADM supposed RRR may have empty SU ref
-                                        /// but this case suposed it always applied!
-                                        /// ??Enumerable.Empty<SpatialUnit>()
-                                                    )
-                                .Where(c => filter.Contains(c.SuId))
-                                .ToList()
-                                .ForEach(su=>affected.Add(dynoR2S.Right)
-                                            // if need su=RRR we may go    
-                                            //suid2RRR[su.SuId] = dynoR2S.Right
-                ));
+            var RightTypeFilter = transaction.TransactionType.RightType;
+
+            var affected = GetActiveRRRsBySpatialUnits(context, filter, RightTypeFilter);
             
             foreach (var oldRRR in affected)
             {
@@ -144,6 +124,34 @@ namespace Ladm
                     asu.EndLifeSpanVersion = DateTime.Now;
                 }
             }
+        }
+
+        private static ICollection<RRR> GetActiveRRRsBySpatialUnits(LadmDbContext context, List<string> spatialUnitsSuIds, string rightTypeFilter)
+        {
+            var result = new List<RRR>(); 
+            var allActiveRRR = context.RRRs.Where(activeRRR => activeRRR.BeginLifeSpanVersion != null
+                                             && activeRRR.EndLifeSpanVersion == null
+                                             //lets assume we have to work with only rrr type
+                                             && activeRRR.TypeName == rightTypeFilter
+                                             );
+            // if we need su=RRR we may go
+            // Dictionary<string, RRR> suid2RRR = new Dictionary<string, RRR>();
+            allActiveRRR.Select(activeR => new { Right = activeR, SpatialUnits = activeR.LAUnit.SpatialUnits })
+                .ToList()
+                .ForEach(dynoR2S =>
+                                (dynoR2S.SpatialUnits
+                                    /// LADM supposed RRR may have empty SU ref
+                                    /// but this case suposed it always applied!
+                                    /// ??Enumerable.Empty<SpatialUnit>()
+                                                    )
+                                .Where(c => spatialUnitsSuIds.Contains(c.SuId))
+                                .ToList()
+                                .ForEach(su => result.Add(dynoR2S.Right)
+                                    // if need su=RRR we may go    
+                                    //suid2RRR[su.SuId] = dynoR2S.Right
+                ));
+
+            return result;
         }
         /// <summary>
         /// Simplest way supposes to cancel old and create new
