@@ -5,10 +5,16 @@
 	Technicall all source RRRs are archived and target produced. 
 	The Merge operation may have as a result an origin property elimenated.
 
-Background: there 2 properties for a different right-holders are exists.
-			REGO is a pre defined type for Occupancy registration
+#Background: there 2 properties for a different right-holders are exists.
+#			REGO is a pre defined type for Occupancy registration
 
-	#PRE for 1
+@merger
+Scenario: Simple merge of 2 properties
+	This kinds operates with SU lifespan.
+	It has 2 source properties and produce single target.
+	At this example only single RRR type assumed
+
+		#PRE for 1
 	Given Registration transaction "REGO" with No."TRN-PRE-OCCUPANCY-4-MERGE-01" is set current
 	# LAUnit is not property - but RRR prototype
 	And Current transaction has target LAUnit "LA-Occupancy-4-Merge-01"
@@ -23,25 +29,7 @@ Background: there 2 properties for a different right-holders are exists.
 	And Current transaction has party "Steve Adams" with role "Grantee" associated with LAUnit "LA-Occupancy-4-Merge-02"	
 	When transaction "TRN-PRE-OCCUPANCY-4-MERGE-01" is completed
 	And transaction "TRN-PRE-OCCUPANCY-4-MERGE-02" is completed
-	#PRE for 2
-	#precondition part reg 2 prop
-	Given Registration transaction "REGO" with No."TRN-PRE-OCCUPANCY-4-MERGE-03" is set current
-	And Current transaction has target LAUnit "LA-Occupancy-4-Merge-03"
-	And Current transaction has property with Uid = "Property 7 (A-Merge 01)" in LAUnit "LA-Occupancy-4-Merge-03"
-	And Current transaction has party "Robert Taler" with role "Grantee" associated with LAUnit "LA-Occupancy-4-Merge-03"
-	#and pre data for 2nd prop
-	Given Registration transaction "REGO" with No."TRN-PRE-OCCUPANCY-4-MERGE-04" is set current
-	And Current transaction has target LAUnit "LA-Occupancy-4-Merge-04"
-	And Current transaction has property with Uid = "Property 7 (A-Merge 02)" in LAUnit "LA-Occupancy-4-Merge-04"
-	And Current transaction has party "John Adams" with role "Grantee" associated with LAUnit "LA-Occupancy-4-Merge-04"	
-	When transaction "TRN-PRE-OCCUPANCY-4-MERGE-03" is completed
-	And transaction "TRN-PRE-OCCUPANCY-4-MERGE-04" is completed
 
-@merger
-Scenario: Simple merge of 2 properties
-	This kinds operates with SU lifespan.
-	It has 2 source properties and produce single target.
-	At this example only single RRR type assumed
 
 	Given Registration transaction "MERG" with No."TRN-MERGE-001" is set current
 	# We have marked this LAUnit as target
@@ -71,6 +59,20 @@ Scenario: Amalgamation merge of 2 properties
 	It has 2 source properties and produce single target. Target is one of the source
 	At this example only single RRR type assumed
 	
+	#PRE for 2
+	#precondition part reg 2 prop
+	Given Registration transaction "REGO" with No."TRN-PRE-OCCUPANCY-4-MERGE-03" is set current
+	And Current transaction has target LAUnit "LA-Occupancy-4-Merge-03"
+	And Current transaction has property with Uid = "Property 7 (A-Merge 01)" in LAUnit "LA-Occupancy-4-Merge-03"
+	And Current transaction has party "Robert Taler" with role "Grantee" associated with LAUnit "LA-Occupancy-4-Merge-03"
+	#and pre data for 2nd prop
+	Given Registration transaction "REGO" with No."TRN-PRE-OCCUPANCY-4-MERGE-04" is set current
+	And Current transaction has target LAUnit "LA-Occupancy-4-Merge-04"
+	And Current transaction has property with Uid = "Property 7 (A-Merge 02)" in LAUnit "LA-Occupancy-4-Merge-04"
+	And Current transaction has party "John Adams" with role "Grantee" associated with LAUnit "LA-Occupancy-4-Merge-04"	
+	When transaction "TRN-PRE-OCCUPANCY-4-MERGE-03" is completed
+	And transaction "TRN-PRE-OCCUPANCY-4-MERGE-04" is completed
+
 	# Main part
 	Given Registration transaction "MERG" with No."TRN-A-MERGE-002" is set current
 	And Current transaction has target LAUnit "LA-Occupancy-4-AmalgaMerge-01"
