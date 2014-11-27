@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Ladm.DataModel
 {
+    /// <summary>
+    /// Transaction is not defined in LADM but it is a container for registration operation data
+    /// </summary>
     [Table("lr_transaction")]
     public class Transaction
     {

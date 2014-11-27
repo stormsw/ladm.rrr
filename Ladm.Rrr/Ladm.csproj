@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataModelHelper.cs" />
+    <Compile Include="DataModel\Batch.cs" />
     <Compile Include="DataModel\LadmDBContext.cs" />
     <Compile Include="DataModel\LAUnit.cs" />
     <Compile Include="DataModel\Party.cs" />
