@@ -29,7 +29,7 @@ namespace Ladm
             return rrrs;
         }
 
-        public static IEnumerable<RRR> GetAllActiveSpatialUnitsInterests(string suid, LadmDbContext context)
+        public static IQueryable<RRR> GetAllActiveSpatialUnitsInterests(string suid, LadmDbContext context)
         {
             var rrrs = (
                 from r in context.RRRs
@@ -39,7 +39,7 @@ namespace Ladm
             return rrrs;
         }
 
-        public static IEnumerable<RRR> GetAllValidSpatialUnitsInterests(string suid, LadmDbContext context)
+        public static IQueryable<RRR> GetAllValidSpatialUnitsInterests(string suid, LadmDbContext context)
         {
             var rrrs = (
                 from r in context.RRRs
@@ -56,7 +56,7 @@ namespace Ladm
         /// <param name="rrrs"></param>
         /// <param name="rightType"></param>
         /// <returns></returns>
-        public static IEnumerable<RRR> FilterInterestsByRight(IEnumerable<RRR> rrrs, string rightType)
+        public static IQueryable<RRR> FilterInterestsByRight(IQueryable<RRR> rrrs, string rightType)
         {
             /// dont like to have there rrrs.ToList()
             return rrrs.Where(r => r.TypeName == rightType);

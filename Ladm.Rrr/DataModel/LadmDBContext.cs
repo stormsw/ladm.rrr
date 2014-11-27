@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,8 +18,19 @@ namespace Ladm.DataModel
         public DbSet<RRR> RRRs { get; set; }
         public DbSet<Party> Parties { get; set; }
 
+        public static void EventLog(string s)
+        {
+#if DEBUG
+            Debug.WriteLine(s);
+#endif
+        }
+
         public LadmDbContext():base("LadmDbConnectionString")
         {
+
+
+            Database.Log = EventLog;
+
             // FIXED: remove and use Appconfig
             //Database.SetInitializer<LadmDbContext>(new CreateDatabaseIfNotExists<LadmDbContext>());
             //Database.SetInitializer<LadmDbContext>(new DropCreateDatabaseIfModelChanges<LadmDbContext>());
